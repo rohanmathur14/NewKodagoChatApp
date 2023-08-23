@@ -83,20 +83,17 @@ const Chat = ({ chatGroupId }) => {
   // };
 
   const chatListFetcher = async (url, chatGroupId22,group_cat_id) => {
-    setGroupCatId(chatGroupId22)
+    
+    //set the group category id zero when new group chat start other wise not
     if(group_chat_id!==chatGroupId22)
       group_cat_id = 0
 
-    console.log('group_cat_id--->>>>',group_cat_id)
     var formdata = new FormData();
     formdata.append("group_id", chatGroupId22);
     formdata.append("group_cat_id", group_cat_id);
     formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
     formdata.append("Userid", userId);
-    formdata.append("Token", userToken);
-
-    // formdata.append("Userid", userId);
-    // formdata.append("Token", uToken);
+    formdata.append("Token", userToken); 
     //for pagination
     formdata.append("start", startRecord);
     formdata.append("perpage", perPage);
@@ -125,8 +122,7 @@ const Chat = ({ chatGroupId }) => {
 
   //topic wise chat listings
   const loadTheChatTopicWise = async (topicId = 0) => {
-    console.log('topicId---->>>',topicId)
-    console.log('topicId---->>>',topicId)
+    
     //set the group cat id
     setGroupCategoryId(topicId);
     //End
@@ -349,20 +345,16 @@ const Chat = ({ chatGroupId }) => {
 
   useEffect(() => {
     if (allRecords?.data) {
-      console.log("Chat data:", allRecords.data?.chat_data?.dbdata);
-      console.log("Login user data:", allRecords.data?.loginUserData);
-      console.log("Topics:", allRecords.data?.topics);
-
+      setGroupCatId(chatGroupId) 
       setChatListings(allRecords.data?.chat_data?.dbdata || []);
-      setLoginUserData(allRecords.data?.loginUserData || {});
-      //if (group_chat_id==0 || group_chat_id !== chatGroupId) {
+      setLoginUserData(allRecords.data?.loginUserData || {});      
+      //when click on group first time set the topic data otherwise not
+      if (group_chat_id !== chatGroupId) {
         setChatTopics(allRecords.data?.topics || []);
-      //}
+      }
     }
   }, [allRecords]);
 
-  //   console.log("chatListings--------", chatListings);
-  //   console.log("chatTopics--------", chatTopics);
 
   const GetChatAttachement = ({ chat }) => {
     let fileExtension = getFileExtension(chat.attachment);
@@ -523,6 +515,7 @@ const Chat = ({ chatGroupId }) => {
                     onChange={handleChangeField}
                     placeholder="Type a message"
                   />
+
                   <input
                     style={{ display: "none" }}
                     ref={inputRef}

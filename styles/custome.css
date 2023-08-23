@@ -87,7 +87,7 @@ h2 span {
 .StoriesListShape{height:44px;width:44px;border-radius:50%;overflow: hidden;margin:0 auto;border: solid 1px #cecece;}
 .StoriesListMore{background-color:#DFDCDC;height:44px;width:44px;border-radius:50%;color:#000000;
 font-size:14px;font-weight:600;cursor: pointer;}
-.topbar{background-color:#fff;padding:10px 0;}
+.topbar{background-color:#fff;padding:10px 0 0;position:fixed;width:100%;z-index:1;}
 .topbar .StoriesList ul li{padding:0 0px;}
 .Notification .dropdown-toggle::after{display:none;}
 .Notification .dropdown-toggle i{font-size:26px;color:#2F80ED;position: relative;}
@@ -96,7 +96,7 @@ width:8px;content:'';border-radius:50%;}
 
 .ProfileImgShape{width:30px;height:30px;overflow: hidden;border-radius:50%;margin-right:6px;}
 
-.ChatGroupList{background-color:#fff;border-radius:10px;padding:0;}
+.ChatGroupList{background-color:#fff;border-radius:10px;padding:0;position:sticky;top:80px;}
 .ChatGroupSearch i{position:absolute;top:12px;left:15px;color:rgba(0, 0, 0, 0.3);font-size: 14px;}
 .GroupSearchInput input{padding-left:40px;border-radius:70px;background:#F2F3F5;height:37px;
   font-size: 12px;}
@@ -146,7 +146,7 @@ display:flex;align-items:center;justify-content:center;background:#fff;}
 .Sender{color:#0060A4;font-size:14px;font-weight:500;}  
 .SenderMsg{color:#272727;font-size:13px;margin:3px 0 10px;line-height: 23px;}
 .SenderImg{border-radius:5px;overflow:hidden;background-color:#eee;margin:5px 0;}
-.SenderImg img{max-width: 102px !important;cursor: pointer;}
+.SenderImg img{max-width: 114px !important;cursor: pointer;}
 .ChatConversation{background:url(../public/images/ChatBgImg.jpg)repeat;background-size:contain;}
 /* .ChatConversation{background:url(../public/images/ChatBgImg.jpg) no-repeat;background-size:cover;
   background: #efeae2;}
@@ -215,7 +215,7 @@ bottom:60px;right:10px;cursor: pointer;    z-index: 1;}
 .SendIcon .btn-info{height:35px;width:35px;border-radius:50%;background-color:#0060A4;color:#fff;font-size:15px;
 padding:0;}
 .SendIcon .btn-info i{position: relative;top:2px;}
-.MessageSentBoxInput input{height:52px;border-radius:50px;border:0;font-size:13px;}
+.MessageSentBoxInput input{height:52px;border-radius:50px;border:0;font-size:13px;padding-right:50px;}
 .MessageSentBoxInput input::placeholder{color:#9093A3;font-size:13.5px;}
 .AttachIcon{ position: absolute; right: 15px; top: 9px; font-size:17px; cursor: pointer; height:30px; width:30px; border-radius:50%; -webkit-border-radius:50%; -moz-border-radius:50%; -ms-border-radius:50%; -o-border-radius:50%;
   display:flex;align-items:center;justify-content:center;background-color:#dfdfdf;padding:4px;
@@ -311,7 +311,7 @@ padding:13px 15px 0;}
 .HighLightsBoxRight h5{font-size:15px;margin:0 0 8px 0;}
 .HighLightsBoxRight p{font-size:12px;color:#918d8d;margin:0;line-height: 1;}
 .HighLightsBoxHead{padding:10px 0 20x;}
-.HighLightsImg{height:295px;width:100%;border-radius:6px;margin:20px 0;    background: #eff0f3;}
+.HighLightsImg{height:295px;width:100%;border-radius:6px;margin:20px 0;background: #eff0f3;}
 .HighLightsImg img{border-radius:8px;}
 
 .HighLightsFooterLeft h5{color:#086DB5;margin:0 0 4px 0;font-size:13px;font-weight:500;}
@@ -395,7 +395,7 @@ border-radius:6px; -webkit-border-radius:6px; -moz-border-radius:6px;
   .StoriesList{overflow-x: scroll;}
   .StoriesList ul li{margin-right:10px;}
   
-.CommentsProfile{height:37px; width:37px; border-radius:50% ; -webkit-border-radius:50% ; -moz-border-radius:50% ; -ms-border-radius:50% ; -o-border-radius:50%; }  
+.CommentsProfile{height:37px; width:37px; border-radius:50% ; -webkit-border-radius:50% ; -moz-border-radius:50% ; -ms-border-radius:50% ; -o-border-radius:50%;border: solid 1px #bebebe; }  
 .Comments h5{color: #086DB5;font-size: 13px;font-weight:500;}
 .Comments{margin-top:2px;}
 .CommentsHead h4{color:#04070D;font-size:13px;font-weight:500;margin:0 20px 0 0px;}
@@ -424,7 +424,7 @@ background-color: #f8f8f8;background-image: -webkit-linear-gradient(top,#f8f8f8,
 .CoomentsBox .modal-body{padding-bottom:0;}
 .CommentsBoxInput textarea{flex:1;}
 .CoomentsBoxImg h4{color:#fff;font-weight:500;text-align:center;margin:30px 30px;font-size:20px;
-line-height:35px;}
+line-height:35px;word-break: break-all;}
 
 /* Add File Rack css */
 .AddFileRack{height: calc(100vh - 200px);overflow: hidden;overflow-y: auto;display:flex;
@@ -453,7 +453,7 @@ align-items:center;justify-content:center;}
   .popup-contentchat {
     background-color: #fff;
     padding:0px;
-    overflow: auto;
+    overflow: hidden;
     height:450px;
   }
   
@@ -840,3 +840,9 @@ padding:7px 13px;cursor: pointer;}
 .DeleteText .btn-translucent-danger{    font-size: 13px;line-height: 16px;padding: 11px 12px;font-weight:500;}
 .HistoryModal .modal-body{height:500px;overflow-y:auto;}
 /* .HighLights11 {height: calc(100vh - 110px) !important;overflow-y:auto;} */
+
+.HighLightsVideo{width: 100%;border-radius: 6px;margin: 20px 0;background: #eff0f3;padding:8px 0;position: relative;}
+.VideoPlayBtn{position: absolute;height:100%;width:100%;background:rgba(0, 0, 0, 0.3);top:0;
+transition-duration:.4s;}
+.VideoPlayBtn i{color:#fff;font-size:40px;}
+.KodagoAdminBody{margin-top:80px;position: relative;}

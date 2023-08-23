@@ -17,7 +17,7 @@ const KodagoAdminBody = ({}) => {
 
   return (
     <>
-      <div className="KodagoAdminBody pt-3">
+      <div className="KodagoAdminBody">
         <div className="container-fluid">
           <Row>
             <Col lg={"3"}>
@@ -30,8 +30,7 @@ const KodagoAdminBody = ({}) => {
                 <HighLights />
               )}
             </Col>
-            <Col lg={"3"}>
-              {console.log('groupID====',groupID)}
+            <Col lg={"3"}>              
               {groupID && groupID > 0 ? (<FileRacks GroupId={groupID} />) : ""}
             </Col>
           </Row>
