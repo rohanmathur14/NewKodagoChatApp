@@ -350,6 +350,7 @@ const Chat = ({ chatGroupId }) => {
       setLoginUserData(allRecords.data?.loginUserData || {});      
       //when click on group first time set the topic data otherwise not
       if (group_chat_id !== chatGroupId) {
+        allRecords.data?.topics.unshift({ id: "0", text: "All" });
         setChatTopics(allRecords.data?.topics || []);
       }
     }
@@ -423,6 +424,15 @@ const Chat = ({ chatGroupId }) => {
     height: 350,
     width: 640,
   });
+
+//Call every 5 second listOfChatGroup function
+useEffect(() => {
+  const interval = setInterval(async() => {   
+    await mutate(chatDataKey);
+  }, 5000);
+  return () => clearInterval(interval);
+}, []);
+
 
   return (
     <>

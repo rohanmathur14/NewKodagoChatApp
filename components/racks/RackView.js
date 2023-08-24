@@ -178,10 +178,10 @@ const addNewRecordShow = () => addNewRecordsetShow(true)
                     </div>
                 </div>
                 {/* List View Table */}
-                {/* <RacksListView/> */}
+                <RacksListView/>
 
                 {/* Grid View Table */}
-                <RacksGridView/>
+                {/* <RacksGridView/> */}
 
 
             </div>
