@@ -29,7 +29,7 @@ const [openItemId, setOpenItemId] = useState(null);
 
       
       <ul className="d-flex">
-        {itemList.slice(0, 3).map((item) => (
+        {itemList.slice(0, 5).map((item) => (
           <li key={item.id}>
             <Dropdown key={`drop`+item.id}
               onMouseEnter={() => handleMouseEnter(item.id)}
