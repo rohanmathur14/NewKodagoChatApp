@@ -228,7 +228,7 @@ const HighLights = ({}) => {
         endMessage={""}
         dataLength={recordListings?.length ?? 0}
       >
-        <div className="HighLights ">
+        <div className="HighLights11 ">
           {recordListings?.length > 0 &&
             recordListings.map((feed, index) => (
               <div className="HighLightsBox" key={index}>

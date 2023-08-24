@@ -27,7 +27,7 @@ if(extension=='jpg' || extension=='jpeg' || extension=='png' || extension=='gif'
           <button className='close-buttonchat' onClick={props.onClose}>x</button>   
           <div className="popup-contentchat">
                   
-            <video width="500" height="350" controls>
+            <video width="500" height="450" controls autoPlay muted loop>
             <source src={props.fileURL} type="video/ogg"></source>
             Your browser does not support the video tag.
             </video>

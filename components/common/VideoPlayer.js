@@ -48,10 +48,13 @@ const VideoPlayerComponent = ({ video }) => {
       };
     }, []);
     return (
-      <div onClick={handleVideoClick} style={{ cursor: "pointer" }}>
-        <video ref={videoRef} width="620" height="440" controls={isPlaying}>
+      <div className="HighLightsVideo" onClick={handleVideoClick} style={{ cursor: "pointer" }}>
+        <video ref={videoRef} width="620" height="340" controls={isPlaying}>
           <source src={videoURL}></source>
         </video>
+        <div className="VideoPlayBtn d-flex align-items-center justify-content-center">
+          <i className="fi-play"></i>
+        </div>
       </div>
     );
   }

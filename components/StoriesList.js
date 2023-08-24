@@ -16,6 +16,7 @@ import SwiperCore, { Navigation, Pagination } from "swiper";
 import "swiper/swiper.min.css";
 import "swiper/swiper-bundle.min.css";
 import { Mousewheel } from "swiper";
+import useSWR from "swr";
 
 SwiperCore.use([Navigation, Pagination, Mousewheel]);
 
@@ -25,12 +26,13 @@ const StoriesList = ({}) => {
   const { userId, userToken } = useUserContext();
   const [stories, setStories] = useState([]);
 
+  const [pageIndex, setPageIndex] = useState(1);
+
   const loadTheStoryListings = async () => {
     var formdata = new FormData();
     formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
     formdata.append("Userid", userId);
-    formdata.append("Token", userToken);
-    //formdata.append("app_version", process.env.NEXT_PUBLIC_VERSION);
+    formdata.append("Token", userToken); 
     formdata.append("get_stories", 1);
     const getChatsRecords = await fetch(
       process.env.NEXT_PUBLIC_API_URL + "groups/feeds",
@@ -45,6 +47,26 @@ const StoriesList = ({}) => {
     setStoryUserListings(storiesResp?.data?.stories || []);
     //console.log("chatResp---->>>", storiesResp?.data?.stories);
   };
+
+  const storyListFetcher = async (url) => {
+    var formdata = new FormData();
+    formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
+    formdata.append("Userid", userId);
+    formdata.append("Token", userToken);
+    formdata.append("get_stories", 1); 
+    const getStoryRecords = await fetch(url, {
+      method: "POST",
+      body: formdata,
+      // mode: 'no-cors',
+    });
+    return await getStoryRecords.json();
+  };
+  const { data: allRecords, error } = useSWR(
+    [`${process.env.NEXT_PUBLIC_API_URL}groups/feeds`, pageIndex],
+    storyListFetcher
+  );
+
+  const storyListngs = allRecords?.data?.stories || [];
 
   useEffect(() => {
     //Call the function
@@ -151,7 +173,7 @@ const StoriesList = ({}) => {
 
   return (
     <>
-      {/* modal open code     */}
+      {/* modal open code */}
 
       <Modal
         size="fullscreen"
@@ -189,8 +211,7 @@ const StoriesList = ({}) => {
             <i className="fi-chevron-right" onClick={goToNextStory}></i>
           </div>
         </div>
-      </Modal>
-      {/* {console.log("storyUserListings----", storyUserListings)} */}
+      </Modal> 
       <div className="StoriesList position-relative">
         {/* Swiper slider */}
         <Swiper
@@ -200,8 +221,8 @@ const StoriesList = ({}) => {
           grabCursor
           slidesPerView={11}
         >
-          {storyUserListings?.length > 0 &&
-            storyUserListings.map((story, index) => (
+          {storyListngs?.length > 0 &&
+            storyListngs.map((story, index) => (
               <SwiperSlide className="d-flex" key={index}>
                 <div
                   className="StoriesListShape"
@@ -221,40 +242,7 @@ const StoriesList = ({}) => {
               </SwiperSlide>
             ))}
         </Swiper>
-      </div>
-
-      {/* <div className="StoriesList">
-        <ListGroup as="ul" horizontal="sm">
-          {storyUserListings.length > 0 &&
-            storyUserListings.map((story, index) => (
-              <ListGroup.Item
-                className="flex-fill text-center border-0"
-                as="li" key={index}
-              >
-                <div className="StoriesListShape">
-                  
-                    <a href="javascript:void(0);">
-                      <ImageLoader
-                        src={story.imageLink}
-                        width={45}
-                        height={45}
-                        alt="Square image"
-                      />
-                    </a>
-                   
-                </div>
-              </ListGroup.Item>
-            ))}
-
-          {storyUserListings?.length > 6 && (
-            <ListGroup.Item className="flex-fill text-center border-0" as="li">
-              <div className="StoriesListMore d-flex align-items-center justify-content-center">
-                <span>6+</span>
-              </div>
-            </ListGroup.Item>
-          )}
-        </ListGroup>
-      </div> */}
+      </div> 
     </>
   );
 };
