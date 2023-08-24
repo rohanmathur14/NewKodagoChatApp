@@ -32,7 +32,7 @@ const HomeAltPage = (props) => {
         <section className="full kodagoadmin">
           {/* TopBar */}
           <TopBar/>
-          {/* KodagoAdminBody     */}
+          {/* KodagoAdminBody  */}
           <KodagoAdminBody/>
           {/* <RackView/> */}
         </section>
