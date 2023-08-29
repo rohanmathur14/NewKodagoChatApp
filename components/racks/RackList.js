@@ -45,17 +45,22 @@ const RackList = ({ GroupId }) => {
         <div className="RacksListMain">
           {fileRackListings?.length > 0 ? (
             fileRackListings.map((fileRack, index) => (
-              <div key={index} className="RacksListBox d-flex justify-content-between align-items-center">
+              <div
+                key={index}
+                className="RacksListBox d-flex justify-content-between align-items-center"
+              >
                 <div className="RacksListBoxLeft d-flex justify-content-between align-items-center">
                   <div className="RacksListIcon">
                     <i className="fi-file"></i>
                   </div>
                   <div className="RacksListText">
-                    <h5>{fileRack.name}</h5>
-                    <p>
-                      Last update on{" "}
-                      <span>{formatDateTime(fileRack.updated_at)}</span>
-                    </p>
+                    <a href={`/fileracks/${fileRack.id}/${fileRack.group_id}/${userToken}/${userId}`}>
+                      <h5>{fileRack.name}</h5>
+                      <p>
+                        Last update on
+                        <span>{formatDateTime(fileRack.updated_at)}</span>
+                      </p>
+                    </a>
                   </div>
                 </div>
                 {/* <div className="RacksListBoxRight">

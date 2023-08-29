@@ -14,12 +14,56 @@ import {Select2Wrapper} from './Select2Wrapper';
 import FileRacks from './FileRacks'
 import RacksGridView from '../racks/RacksGridView'
 import RacksShowMoreEdit from '../racks/RacksShowMoreEdit'
-
+import { useFileRackContext } from "../../components/FileRackContext";
 
 
 const RackView = ({}) => {
 
-const [groupID, setGroupID] = useState(0);
+const {sheetId, groupId, userId, userToken } = useFileRackContext();  
+
+ 
+//define the fileRacks variable
+const [fileRackRecordTheadListings, setFileRackRecordTheadListings] = useState([]);
+const [fileRackRecordDataListings, setFileRackRecordDataListings] = useState([]);
+//list and grid view variable
+const [isListView, setIsListView] = useState(true);
+
+
+const getFileRackRecordListings = async () => {
+  //console.log('chatListingsByGroupId--->>>>')
+  var formdata = new FormData();
+  formdata.append("sheet_id", sheetId);
+  formdata.append("group_id", groupId);
+
+  formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
+  formdata.append("Userid", userId);
+  formdata.append("Token", userToken);
+  const getFileRacksRecords = await fetch(
+    process.env.NEXT_PUBLIC_API_URL + "sheets/viewData_v1",
+    {
+      method: "POST",
+      body: formdata,
+      //mode: 'no-cors'
+    }
+  );
+  const fileRackRecordRes = await getFileRacksRecords.json(); 
+  setFileRackRecordTheadListings(fileRackRecordRes?.data?.sheetFields || []);
+  setFileRackRecordDataListings(fileRackRecordRes?.data?.sheetData || []);  
+
+};
+useEffect(async () => {
+  //Call the function
+  getFileRackRecordListings(); 
+}, [sheetId,groupId,userId,userToken]);
+
+// console.log('fileRackRecordTheadListings------',fileRackRecordTheadListings)
+// console.log('fileRackRecordDataListings------',fileRackRecordDataListings)
+
+const handleViewIconClick = () => {
+    // Your logic for the onClick action 
+    setIsListView(!isListView);
+
+  };
 
 // Advance Filter   
 
@@ -87,7 +131,8 @@ const addNewRecordShow = () => addNewRecordsetShow(true)
                                         placement='top'
                                         overlay={<Tooltip>View your Records as a list </Tooltip>}
                                         >
-                                        <a className="align-items-center justify-content-center ">
+                                            
+                                        <a onClick={handleViewIconClick} className={`align-items-center justify-content-center ${isListView ? 'active' : ''}`}>
                                             <i className="fi-list"></i>
                                         </a>
                                     </OverlayTrigger>  
@@ -97,7 +142,7 @@ const addNewRecordShow = () => addNewRecordsetShow(true)
                                         placement='top'
                                         overlay={<Tooltip>View your Records as a Grid </Tooltip>}
                                         >
-                                        <a className="align-items-center justify-content-center active">
+                                        <a onClick={handleViewIconClick} className={`align-items-center justify-content-center ${!isListView ? 'active' : ''}`}>
                                             <i className="fi-grid"></i>
                                         </a>
                                     </OverlayTrigger>  
@@ -115,7 +160,8 @@ const addNewRecordShow = () => addNewRecordsetShow(true)
                             </div>
                         </div>
                         <div className="FilterSecondRight">
-                            <Button variant='outline-primary'>Export</Button>
+                        <Button variant="outline-primary" onClick={() => window.history.back()}>Back</Button>
+                            <Button variant='outline-primary' className="mx-2">Export</Button>
                             <Button variant='outline-primary' className="mx-2">Import</Button>
                             <Button variant='primary'  onClick={addNewRecordShow} >Add new</Button>
                         </div>
@@ -177,8 +223,9 @@ const addNewRecordShow = () => addNewRecordsetShow(true)
                         </Row>
                     </div>
                 </div>
+                {isListView ? <RacksListView fileRackRecordTheadListings={fileRackRecordTheadListings} fileRackRecordDataListings={fileRackRecordDataListings} /> : <RacksGridView/>}
                 {/* List View Table */}
-                <RacksListView/>
+                
 
                 {/* Grid View Table */}
                 {/* <RacksGridView/> */}
