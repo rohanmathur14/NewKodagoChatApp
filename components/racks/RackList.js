@@ -57,8 +57,8 @@ const RackList = ({ GroupId }) => {
                     <a href={`/fileracks/${fileRack.id}/${fileRack.group_id}/${userToken}/${userId}`}>
                       <h5>{fileRack.name}</h5>
                       <p>
-                        Last update on
-                        <span>{formatDateTime(fileRack.updated_at)}</span>
+                        Last update on 
+                        <span> {formatDateTime(fileRack.updated_at)}</span>
                       </p>
                     </a>
                   </div>

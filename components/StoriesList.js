@@ -199,7 +199,8 @@ const StoriesList = ({}) => {
               width: "100%",
             }}
           >
-            <i className="fi-chevron-left" onClick={goToPreviousStory}></i>
+
+            {stories.length>1 && <i className="fi-chevron-left" onClick={goToPreviousStory}></i>}
             <Stories
               stories={stories}
               defaultInterval={3500}
@@ -208,7 +209,7 @@ const StoriesList = ({}) => {
               currentIndex={currentStoryIndex}
               className='justify-content-center'
             />
-            <i className="fi-chevron-right" onClick={goToNextStory}></i>
+            {stories.length>1 &&<i className="fi-chevron-right" onClick={goToNextStory}></i>}
           </div>
         </div>
       </Modal> 

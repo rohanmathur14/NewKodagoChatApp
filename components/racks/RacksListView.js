@@ -34,7 +34,7 @@ const RacksListView = ({
   const [isEditing, setIsEditing] = useState(false);
   const [username, setUsername] = useState("Jenny"); // Set the initial value of the username
 
-    console.log('fileRackRecordDataListings---',fileRackRecordDataListings)
+   // console.log('fileRackRecordDataListings---',fileRackRecordDataListings)
 
   // Function to handle the click event on the h2 element
   const handleUsernameClick = () => {
@@ -151,7 +151,7 @@ const RacksListView = ({
                     <div className="d-flex align-items-center px-2 TableDiv">
                       <div className="prof-pic position-relative">
                         <ImageLoader
-                          src="/images/avtarimg-eight.jpg"
+                          src={record.imageLink}
                           quality={100}
                           layout="fill"
                           objectFit="contain"

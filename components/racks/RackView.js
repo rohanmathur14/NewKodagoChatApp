@@ -223,7 +223,7 @@ const addNewRecordShow = () => addNewRecordsetShow(true)
                         </Row>
                     </div>
                 </div>
-                {isListView ? <RacksListView fileRackRecordTheadListings={fileRackRecordTheadListings} fileRackRecordDataListings={fileRackRecordDataListings} /> : <RacksGridView/>}
+                {isListView ? <RacksListView fileRackRecordTheadListings={fileRackRecordTheadListings} fileRackRecordDataListings={fileRackRecordDataListings} /> : <RacksGridView fileRackRecordDataListings={fileRackRecordDataListings} />}
                 {/* List View Table */}
                 
 
