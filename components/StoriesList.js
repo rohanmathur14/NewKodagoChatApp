@@ -67,10 +67,14 @@ const StoriesList = ({}) => {
   );
 
   const storyListngs = allRecords?.data?.stories || [];
+  const userDetails = allRecords?.userDetail || {};
+ 
 
   useEffect(() => {
     //Call the function
-    loadTheStoryListings();
+    //loadTheStoryListings();
+    localStorage.setItem('username',userDetails.name);
+    localStorage.setItem('profile_pic',userDetails.profile_pic); 
   }, []);
 
   // Swiper code here

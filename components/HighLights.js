@@ -326,6 +326,7 @@ const HighLights = ({}) => {
                               placeholder="Add a comment…"
                               onChange={handleChangeField}
                               value={commentMessage}
+                              id={`commentFrm-${index}`}
                             />
 
                             <div className="SendIcon d-flex  justify-content-center ms-2">

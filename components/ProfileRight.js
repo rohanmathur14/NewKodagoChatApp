@@ -13,10 +13,12 @@ const ProfileRight = ({}) => {
     window.close();
   };
 
+  //console.log('fffff', localStorage.getItem('username'))
+
   return (
     <>
       <div className="ProfileRight text-end d-flex justify-content-end align-items-center">
-        <div className="Notification me-2">
+        {/* <div className="Notification me-2">
           <Dropdown key={`1`}>
             <Dropdown.Toggle variant="" className="p-0">
               <i className="fi-notifications-new"></i>
@@ -34,7 +36,7 @@ const ProfileRight = ({}) => {
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-        </div>
+        </div> */}
         <div className="ProfileName">
           <Dropdown key={`2`}>
             <Dropdown.Toggle
@@ -49,10 +51,11 @@ const ProfileRight = ({}) => {
                   alt="Square image"
                 />
               </div>
-              <span className="m-0">NKI India</span>
+              {/* <span className="m-0">NKI India</span> */}
+              <span className="m-0">Kodago</span>
             </Dropdown.Toggle>
             <Dropdown.Menu className="my-1">
-              <Dropdown.Item eventKey="1" key={`1`}>
+              {/* <Dropdown.Item eventKey="1" key={`1`}>
                 Action
               </Dropdown.Item>
               <Dropdown.Item eventKey="2" key={`2`}>
@@ -61,7 +64,7 @@ const ProfileRight = ({}) => {
               <Dropdown.Divider />
               <Dropdown.Item eventKey="3" key={`3`}>
                 Something else
-              </Dropdown.Item>
+              </Dropdown.Item> */}
               <Dropdown.Item onClick={handleLogout} eventKey="4" key={`4`}>
                 Logout
               </Dropdown.Item>
