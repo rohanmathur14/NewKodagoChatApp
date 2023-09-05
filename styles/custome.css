@@ -130,7 +130,8 @@ display:flex;align-items:center;justify-content:center;background:#fff;}
 .ChatMain{border-radius:10px;background-color:#fff;}
 .ChatConversation ul li{clear: both;}
 .ConversationList{align-items: flex-end;display: inline-flex;margin-bottom:10px;position: relative;}
-.CtextWrapContent{background-color: #fff;border-radius: 0px 8px 8px 8px;padding:6px 15px;position: relative;}
+.CtextWrapContent{background-color: #fff;border-radius: 0px 8px 8px 8px;padding:6px 15px;position: relative;
+}
 .CtextWrapContent::before{border-bottom: 8px solid transparent;
   border-left: 8px solid #fff;
   border-right: 8px solid transparent;
@@ -146,6 +147,7 @@ display:flex;align-items:center;justify-content:center;background:#fff;}
 .Sender{color:#0060A4;font-size:14px;font-weight:500;}  
 .SenderMsg{color:#272727;font-size:13px;margin:3px 0 10px;line-height: 23px;}
 .SenderImg{border-radius:5px;overflow:hidden;background-color:#eee;margin:5px 0;}
+.ChatConversation ul li.RightChat .SenderMsg{text-align:left;}
 .SenderImg img{max-width: 114px !important;cursor: pointer;}
 .ChatConversation{background:url(../public/images/ChatBgImg.jpg)repeat;background-size:contain;}
 /* .ChatConversation{background:url(../public/images/ChatBgImg.jpg) no-repeat;background-size:cover;
@@ -511,6 +513,11 @@ align-items:center;justify-content:center;}
 
 .StoriesModal i + div > div {justify-content:center;}
 .StoriesModal div span p{line-height:1.3;}
+.StoriesModal h3{word-break: break-all;overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;}
 
 /* Create Topic */
 .CreateTopic{padding:5px 20px 5px 15px;}
