@@ -31,39 +31,37 @@ const [openItemId, setOpenItemId] = useState(null);
       <ul className="d-flex">
         {itemList.slice(0, 5).map((item) => (
           <li key={item.id}>
-            <Dropdown key={`drop`+item.id}
+            <div className="TopicMain" key={`drop`+item.id}
               onMouseEnter={() => handleMouseEnter(item.id)}
               onMouseLeave={handleMouseLeave}
               //show={openItemId === item.id}
               onClick={() => loadTheChatTopicWise(item.id)}
             >
-              <Dropdown.Toggle
-                variant="outline-secondary"
-                className="border-0 p-0 bg-transparent"
+              <h5
                 onMouseEnter={() => handleMouseEnter(item.id)}
                 onMouseLeave={handleMouseLeave}
                 //show={openItemId === item.id}
               >
                 {item.text}
-              </Dropdown.Toggle>
+              </h5>
               {item?.nodes && (
-                <Dropdown.Menu
-                  className="mt-0 ms-0"
+                <div className="TopicSub mt-0 ms-0"
+                 
                   onMouseEnter={() => handleMouseEnter(item.id)}
                   onMouseLeave={handleMouseLeave}
                 >
                   {item.nodes.map((menuItem) => (
-                    <Dropdown.Item
+                    <div className="TopicSubList"
                       key={menuItem.id}
                       eventKey={menuItem.id}
                       onClick={() => loadTheChatTopicWise(menuItem.id)}
                     >
                       {menuItem.text}
-                    </Dropdown.Item>
+                    </div>
                   ))}
-                </Dropdown.Menu>
+                </div>
               )}
-            </Dropdown>
+            </div>
           </li>
         ))}
     </ul>

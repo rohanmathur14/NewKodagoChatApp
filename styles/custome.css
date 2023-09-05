@@ -195,6 +195,7 @@ padding-bottom: 10px;}
 .RacksListIcon{background-color:#E7E7E7;height:50px;width:50px;border-radius:50%;display:flex;
 align-items:center;justify-content:center;color:#086DB5;font-size:25px;}
 .RacksListText h5{color:#1A1D1E;font-size:13.5px;font-weight:600;margin:0;}
+.RacksListText h5:hover{color:#0060A4;}
 .RacksListText p{color:#6A6A6A;font-size:10.5px;margin:0;    line-height: 21px;}
 .RacksListText{flex:1;margin-left:12px;}
 .RacksListBoxRight .dropdown-toggle::after{display:none;}
@@ -203,14 +204,59 @@ align-items:center;justify-content:center;color:#086DB5;font-size:25px;}
 .RackAdd{height:68px;width:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;
 background-color:#0060A4;box-shadow: rgba(12, 30, 96, 0.25) 0px 4px 20px 0px;position:absolute;
 bottom:60px;right:10px;cursor: pointer;    z-index: 1;}
-.ProjectListMain ul li button{font-size:12px;color:#1A1D1E;}
-.ProjectListMain ul li{margin:0 20px 0 0;}
+.TopicMain h5{font-size:12px;color:#1A1D1E;    font-weight: 500;margin:0;position: relative;cursor: pointer;
+padding:5px 10px 5px 0;}
+.TopicMain h5:after{display: block;width: 6px;height: 6px;border-top: 2px solid #8e9091;
+border-left: 2px solid #8e9091;content: '';position: absolute;right:-1px;top:9px;transform: rotate(227deg);}
+.ProjectListMain ul li{  margin:0 20px 0 0;}
 .ProjectListMain ul li button:hover{background-color:transparent !important;}
 .btn-outline-secondary:hover, .btn-outline-secondary:focus, .btn-outline-secondary:active, .btn-outline-secondary.active, .btn-outline-secondary.show, .btn-outline-secondary.dropdown-toggle.show, .show > .btn-outline-secondary.dropdown-toggle{background-color:transparent;border-color:transparent;}
 .ProjectListMain ul li .show  button{color:#0060A4 !important;}
-.ProjectListMain{padding:5px 15px;}
-.ProjectListMain ul li .dropdown-item{font-size:12px;}
+.ProjectListMain{padding:3px 15px;}
 .ProjectListMain .dropdown-menu::after{width: 13px;height: 13px;top: -6px;}
+.TopicMain{position: relative;z-index:11;}
+
+.TopicSub {position:absolute;left:0;top:25px;background:#fff;display:none;padding: 7px 10px;
+box-shadow:0 5px 10px rgba(30,32,37,.12);transition: height 0.5s;border: 1px solid #cbd6e2;}
+.TopicSub:after{position: absolute;
+  top: -5px;
+  content: "";
+  pointer-events: none;
+  border-left-width: 1px;
+  border-top-width: 1px;
+  border-left-style: solid;
+  border-top-style: solid;
+  border-right: 1px solid #cbd6e2;
+  border-bottom: 1px solid #cbd6e2;
+  -o-border-image: initial;
+  border-image: initial;
+  -webkit-clip-path: polygon(100% 100%,0 100%,100% 0);
+  clip-path: polygon(100% 100%,0 100%,100% 0);
+  border-top-left-radius: 100%;
+  width: 10px;
+  height: 10px;
+  background-color: inherit;
+  transform: rotate(220deg);
+  border-top-color: transparent!important;
+  border-left-color: transparent!important;
+  -webkit-transform: rotate(220deg);
+  -moz-transform: rotate(220deg);
+  -ms-transform: rotate(220deg);
+  -o-transform: rotate(220deg);
+  left: 3px;
+}
+
+.TopicSubList{font-size:12px;padding: 5px 0;cursor: pointer;transition-duration:.4s;}
+.TopicSubList:hover{color:#0060A4;}
+.ProjectListMain ul li:hover .TopicSub{display:table;height:100%;animation: slide-up 0.5s ease-in-out;    min-width: 100px;}
+@keyframes slide-up {
+    from {
+      transform: translateY(10%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
 
 .MessageSentBox{margin:0 20px;padding-bottom:20px;}
 .MessageSentBoxInput{position: relative;flex:1;margin-right:30px;}
@@ -336,7 +382,7 @@ padding:13px 15px 0;}
 .HighLightShowMoreBox{padding:6px 0;}
 
 .HighLightstext{margin:10px 0 0;}
-.HighLightstext p{margin:0;}
+.HighLightstext p{margin:0;word-break: break-all;}
 
 .DocumentBox{ border:solid 1px #C3CDD8; height:46px; width:46px;
 border-radius:6px; -webkit-border-radius:6px; -moz-border-radius:6px;
@@ -644,7 +690,7 @@ background-color:#ebebeb;}
 .RacksListView .table-responsive{height:calc(100vh - 290px);;overflow-y: auto;border-top:solid 1px #dfe3eb;}
 
 .RacksListView table{border-color: #dfe3eb;}
-.prof-pic{ height:30px; width:30px; border-radius:50% ; -webkit-border-radius:50% ; -moz-border-radius:50% ; -ms-border-radius:50% ; -o-border-radius:50% ;overflow: hidden; }
+.prof-pic{ height:30px; width:30px; border-radius:50% ; -webkit-border-radius:50% ; -moz-border-radius:50% ; -ms-border-radius:50% ; -o-border-radius:50% ;overflow: hidden;    border: solid 1px #a9b3bd; }
 .prof-pic img{object-fit:cover;width:100%;height:100%;}
 .username h2{color: #0060a4;font-size: 13px;font-weight: 500;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;
 width: 139px;}
