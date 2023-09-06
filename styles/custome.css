@@ -131,7 +131,7 @@ display:flex;align-items:center;justify-content:center;background:#fff;}
 .ChatConversation ul li{clear: both;}
 .ConversationList{align-items: flex-end;display: inline-flex;margin-bottom:10px;position: relative;}
 .CtextWrapContent{background-color: #fff;border-radius: 0px 8px 8px 8px;padding:6px 15px;position: relative;
-}
+  max-width:500px;}
 .CtextWrapContent::before{border-bottom: 8px solid transparent;
   border-left: 8px solid #fff;
   border-right: 8px solid transparent;
@@ -146,7 +146,7 @@ display:flex;align-items:center;justify-content:center;background:#fff;}
 
 .Sender{color:#0060A4;font-size:14px;font-weight:500;}  
 .SenderMsg{color:#272727;font-size:13px;margin:3px 0 10px;line-height: 23px;}
-.SenderImg{border-radius:5px;overflow:hidden;background-color:#eee;margin:5px 0;}
+.SenderImg{border-radius:5px;overflow:hidden;background-color:#eee;margin:5px 0;text-align:center;}
 .ChatConversation ul li.RightChat .SenderMsg{text-align:left;}
 .SenderImg img{max-width: 114px !important;cursor: pointer;}
 .ChatConversation{background:url(../public/images/ChatBgImg.jpg)repeat;background-size:contain;}
@@ -175,7 +175,7 @@ background-color:#fff;border-radius:6px;}
 .ChatConversation .RightChat .ConversationList .CtextWrapContent {
   background-color: #DFE2E3;
   border-radius: 8px 2px 8px 8px;
-  text-align: right;
+  text-align: right;margin-left:auto;
 }
 
 .ChatConversation .RightChat .ConversationList .CtextWrapContent::before{left: auto;right: -9px;
@@ -216,8 +216,9 @@ border-left: 2px solid #8e9091;content: '';position: absolute;right:-1px;top:9px
 .ProjectListMain .dropdown-menu::after{width: 13px;height: 13px;top: -6px;}
 .TopicMain{position: relative;z-index:11;}
 
-.TopicSub {position:absolute;left:0;top:25px;background:#fff;display:none;padding: 7px 10px;
+.TopicSub {position:absolute;left:0;top:25px;background:#fff;display:none;padding: 7px 0px;
 box-shadow:0 5px 10px rgba(30,32,37,.12);transition: height 0.5s;border: 1px solid #cbd6e2;}
+
 .TopicSub:after{position: absolute;
   top: -5px;
   content: "";
@@ -246,9 +247,26 @@ box-shadow:0 5px 10px rgba(30,32,37,.12);transition: height 0.5s;border: 1px sol
   left: 3px;
 }
 
-.TopicSubList{font-size:12px;padding: 5px 0;cursor: pointer;transition-duration:.4s;}
-.TopicSubList:hover{color:#0060A4;}
+.TopicSubList{font-size:13px;padding: 7px 10px;cursor: pointer;transition-duration:.4s;position: relative;}
+.TopicSubList:after{display: block;width: 5px;height: 5px;border-top: 2px solid #8e9091;
+border-left: 2px solid #8e9091;content: '';position: absolute;right:6px;top:13px;transform: rotate(133deg);}
+.TopicSubList:hover{color:#0060A4;background:#f2f2f2;}
+
 .ProjectListMain ul li:hover .TopicSub{display:table;height:100%;animation: slide-up 0.5s ease-in-out;    min-width: 100px;}
+
+.TopicSubListIn{position: absolute;
+  left:98px;
+  top:5px;
+  background: #fff;
+  display: none;
+  padding: 7px 10px;
+  box-shadow: 0 5px 10px rgba(30,32,37,.12);
+  transition: height 0.5s;
+  border: 1px solid #cbd6e2;min-width:100px;}
+
+.TopicSubList:hover .TopicSubListIn{display:block;animation: slide-up 0.5s ease-in-out;} 
+.TopicSubListInList{font-size:12px;padding: 7px 10px;cursor: pointer;transition-duration:.4s;color: #1A1D1E;}
+
 @keyframes slide-up {
     from {
       transform: translateY(10%);
@@ -492,7 +510,7 @@ align-items:center;justify-content:center;}
     left: 0;
     right: 0;
     background-color: rgba(0, 0, 0, 1);
-    z-index: 10;
+    z-index: 111;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -502,13 +520,13 @@ align-items:center;justify-content:center;}
     background-color: #fff;
     padding:0px;
     overflow: hidden;
-    height:450px;
+    max-height:450px;
   }
   
   .popup-contentchat img {
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain;
+    object-fit: contain;max-height:450px;
   }
   
   .close-buttonchat {
@@ -899,3 +917,4 @@ padding:7px 13px;cursor: pointer;}
 transition-duration:.4s;}
 .VideoPlayBtn i{color:#fff;font-size:40px;}
 .KodagoAdminBody{margin-top:80px;position: relative;}
+

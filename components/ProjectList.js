@@ -57,6 +57,11 @@ const [openItemId, setOpenItemId] = useState(null);
                       onClick={() => loadTheChatTopicWise(menuItem.id)}
                     >
                       {menuItem.text}
+                      <div className="TopicSubListIn">
+                        <div className="TopicSubListInList">ABC</div>
+                        <div className="TopicSubListInList">ABC2</div>
+                        <div className="TopicSubListInList">ABC3</div>
+                      </div>
                     </div>
                   ))}
                 </div>
