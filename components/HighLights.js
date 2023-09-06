@@ -22,7 +22,7 @@ const HighLights = ({}) => {
   const { userId, userToken } = useUserContext();
   const [moreComment, setMoreComment] = useState([]);
   const [feedDetail, setFeedDetails] = useState({});
-  const [commentMessage, setCommentMessage] = useState();
+  const [commentMessage, setCommentMessage] = useState("");
   const [pageIndex, setPageIndex] = useState(1);
   //define the chat message variable
   const { register, handleSubmit, setValue } = useForm();
@@ -194,10 +194,13 @@ const HighLights = ({}) => {
     }
   };
 
-  const handleChangeField = async (e) => {
-    const textComment = e.target.value;
-    await setCommentMessage(textComment);
-    //console.log('chatMessage===',chatMessage)
+  // const handleChangeField = async (e) => {
+  //   const textComment = e.target.value;
+  //   await setCommentMessage(textComment); 
+  // };
+
+  const handleChangeField = (e) => {
+    setCommentMessage(e.target.value);
   };
 
   return (
@@ -327,6 +330,7 @@ const HighLights = ({}) => {
                               onChange={handleChangeField}
                               value={commentMessage}
                               id={`commentFrm-${index}`}
+                              name={`commentFrm-${index}`}
                             />
 
                             <div className="SendIcon d-flex  justify-content-center ms-2">
