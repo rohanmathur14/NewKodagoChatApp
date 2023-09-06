@@ -7,13 +7,11 @@ import { Col, Row } from "react-bootstrap";
 import ListGroup from "react-bootstrap/ListGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 
-const ProfileRight = ({}) => {
+const ProfileRight = ({ userDetails }) => {
   const handleLogout = async () => {
     window.open("about:blank", "_self");
     window.close();
   };
-
-  //console.log('fffff', localStorage.getItem('username'))
 
   return (
     <>
@@ -45,14 +43,20 @@ const ProfileRight = ({}) => {
             >
               <div className="ProfileImgShape">
                 <ImageLoader
-                  src="/images/profilelogo.png"
+                  src={
+                    userDetails?.profile_pic
+                      ? userDetails.profile_pic
+                      : "/images/profilelogo.png"
+                  }
                   width={45}
                   height={45}
                   alt="Square image"
                 />
               </div>
               {/* <span className="m-0">NKI India</span> */}
-              <span className="m-0">Kodago</span>
+              {userDetails?.name && (
+                <span className="m-0">{userDetails.name}</span>
+              )}
             </Dropdown.Toggle>
             <Dropdown.Menu className="my-1">
               {/* <Dropdown.Item eventKey="1" key={`1`}>

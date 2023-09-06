@@ -44,7 +44,7 @@ const Finder = ({ Component, pageProps }) => {
         <title>Kodago | Directory &amp; Listings</title>
         {/* <meta name='description' content='' />
         <meta name='keywords' content='' /> */}
-        <meta name="author" content="Dailmenow" />
+        <meta name="author" content="Kodago" />
         //{" "}
         <link
           rel="apple-touch-icon"
