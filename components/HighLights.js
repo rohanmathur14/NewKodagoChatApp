@@ -27,6 +27,9 @@ const HighLights = ({}) => {
   //define the chat message variable
   const { register, handleSubmit, setValue } = useForm();
 
+  const [userDetails, setUserDetails] = useState(null);
+
+
   const buildFormData = async () => {
     const formData = new FormData();
     formData.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
@@ -162,8 +165,8 @@ const HighLights = ({}) => {
     if (commentMessage && commentMessage != "") {
       let commentObj = {
         id: 0,
-        username: feed.name,
-        imageLink: feed.imageLink,
+        username: userDetails.name,
+        imageLink: userDetails.profile_pic,
         comment: commentMessage,
         created_at: getDateTime(),
       };
@@ -202,6 +205,16 @@ const HighLights = ({}) => {
   const handleChangeField = (e) => {
     setCommentMessage(e.target.value);
   };
+
+  useEffect(() => {
+    // Retrieve the user details from localStorage
+    const storedUserDetails = localStorage.getItem('userDetails');
+
+    if (storedUserDetails) {
+      // If data is found in localStorage, parse and set it in state
+      setUserDetails(JSON.parse(storedUserDetails));
+    }
+  }, []);
 
   return (
     <>

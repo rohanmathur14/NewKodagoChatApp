@@ -12,7 +12,7 @@ const TopBar = ({}) => {
   const [loginUserDetails, setLoginUserDetails] = useState();
   const { userId, userToken } = useUserContext(); 
   
-  const loadTheStoryListings = async () => {
+  const loadTheUserDetails = async () => {
     var formdata = new FormData();
     formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
     formdata.append("Userid", userId);
@@ -29,11 +29,19 @@ const TopBar = ({}) => {
 
     const storiesResp = await getChatsRecords.json();
     setLoginUserDetails(storiesResp?.userDetail || {});
+     // Store the data in localStorage
+     window.localStorage.setItem('userDetails', JSON.stringify(storiesResp?.userDetail || {}));
   };
 
   useEffect(() => {
-    loadTheStoryListings();
-  }, []);
+    // Check if the data is already in localStorage before making a network request
+    const storedUserDetails = localStorage.getItem('userDetails');
+    if (storedUserDetails) {
+      setLoginUserDetails(JSON.parse(storedUserDetails));
+    } else {
+      loadTheUserDetails();
+    }
+  }, [userId, userToken]);
 
   return (
     <>
