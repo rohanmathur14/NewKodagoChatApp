@@ -17,6 +17,9 @@ const CommentModal = ({ show, handleClose, ...props }) => {
   const [commentListings, setCommentListings] = useState(props.commentListings);
   const [commentMessage, setCommentMessage] = useState();
 
+  const [userDetails, setUserDetails] = useState(null);
+
+
   const handleChangeField = async (e) => {
     const textComment = e.target.value;
     await setCommentMessage(textComment);
@@ -28,14 +31,14 @@ const CommentModal = ({ show, handleClose, ...props }) => {
       //console.log("commentMessage-----", commentMessage);
       let commentObj = {
         id: 0,
-        username: props.feedUserDetail.name,
-        imageLink: props.feedUserDetail.imageLink,
+        username: userDetails.name,
+        imageLink: userDetails.profile_pic,
         comment: commentMessage,
         created_at: getDateTime(),
       };
       setCommentMessage("");
       let newState = [...commentListings];
-      newState.push(commentObj);
+      newState.unshift(commentObj);
       await setCommentListings(newState);
       //update new comment on previous listing
       props.feedUserDetail.comments.dbdata.unshift(commentObj);
@@ -110,6 +113,16 @@ const CommentModal = ({ show, handleClose, ...props }) => {
       );
     }
   };
+
+  useEffect(() => {
+    // Retrieve the user details from localStorage
+    const storedUserDetails = localStorage.getItem('userDetails');
+
+    if (storedUserDetails) {
+      // If data is found in localStorage, parse and set it in state
+      setUserDetails(JSON.parse(storedUserDetails));
+    }
+  }, []);
   return (
     <>
       <Modal
