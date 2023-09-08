@@ -15,20 +15,22 @@ import { getDateTime, formatDateTime, formatAmPm } from "../helper/helper";
 import { useForm } from "react-hook-form";
 //Import comment modal
 import CommentModal from "../components/common/modals/CommentsModal";
-import VideoPlayerComponent from "../components/common/VideoPlayer"
+import VideoPlayerComponent from "../components/common/VideoPlayer";
 
 const HighLights = ({}) => {
   const [userFeeds, setUserFeeds] = useState([]);
   const { userId, userToken } = useUserContext();
   const [moreComment, setMoreComment] = useState([]);
   const [feedDetail, setFeedDetails] = useState({});
-  const [commentMessage, setCommentMessage] = useState("");
+
+  //const [commentMessage, setCommentMessage] = useState("");
+  const [commentMessages, setCommentMessages] = useState([]); // Local state for comment messages
+
   const [pageIndex, setPageIndex] = useState(1);
   //define the chat message variable
   const { register, handleSubmit, setValue } = useForm();
 
   const [userDetails, setUserDetails] = useState(null);
-
 
   const buildFormData = async () => {
     const formData = new FormData();
@@ -56,7 +58,7 @@ const HighLights = ({}) => {
           {/* <video width="620" height="440" controls>
             <source src={feed?.video[0]?.thumbURL}></source>
           </video> */}
-          <VideoPlayerComponent video={feed?.video[0]?.thumbURL}/>
+          <VideoPlayerComponent video={feed?.video[0]?.thumbURL} />
         </>
       );
     } else if (
@@ -128,7 +130,7 @@ const HighLights = ({}) => {
     //feed detail
     setFeedDetails((previous) => ({
       ...previous,
-      ...feed
+      ...feed,
     }));
     setShow(true);
   };
@@ -161,7 +163,9 @@ const HighLights = ({}) => {
       // Example: setRecordListings([...recordListings, ...newData]);
     }, 1000);
   };
-  const handleCommentSubmit = async (feed) => {
+  const handleCommentSubmit = async (feed, feedIndex) => {
+    const commentMessage = commentMessages[feedIndex];
+
     if (commentMessage && commentMessage != "") {
       let commentObj = {
         id: 0,
@@ -170,7 +174,10 @@ const HighLights = ({}) => {
         comment: commentMessage,
         created_at: getDateTime(),
       };
-      setCommentMessage("");
+      // Reset the comment message for this specific instance
+      const newCommentMessages = [...commentMessages];
+      newCommentMessages[feedIndex] = "";
+      setCommentMessages(newCommentMessages);
       //shift the new object on top with push
       feed.comments.dbdata.unshift(commentObj);
       //increment in total when new comment is coming
@@ -197,18 +204,24 @@ const HighLights = ({}) => {
     }
   };
 
-  // const handleChangeField = async (e) => {
-  //   const textComment = e.target.value;
-  //   await setCommentMessage(textComment); 
-  // };
+  // Function to handle the "keydown" event
+  const handleKeyDown = (e, feed, feedIndex) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      // If Enter key is pressed without Shift key
+      e.preventDefault(); // Prevent the newline from being added
+      handleCommentSubmit(feed, feedIndex); // Submit the comment
+    }
+  };
 
-  const handleChangeField = (e) => {
-    setCommentMessage(e.target.value);
+  const handleChangeField = (e, feedIndex) => {
+    const newCommentMessages = [...commentMessages];
+    newCommentMessages[feedIndex] = e.target.value;
+    setCommentMessages(newCommentMessages); // Update the state with the new comment message
   };
 
   useEffect(() => {
     // Retrieve the user details from localStorage
-    const storedUserDetails = localStorage.getItem('userDetails');
+    const storedUserDetails = localStorage.getItem("userDetails");
 
     if (storedUserDetails) {
       // If data is found in localStorage, parse and set it in state
@@ -247,7 +260,11 @@ const HighLights = ({}) => {
         <div className="HighLights11 ">
           {recordListings?.length > 0 &&
             recordListings.map((feed, index) => (
-              <div className="HighLightsBox" key={index}>
+              <div
+                className="HighLightsBox"
+                key={"H-" + index}
+                id={"HighLightsBox-" + index}
+              >
                 <div className="HighLightsBoxHead d-flex align-items-center">
                   <div className="HighLightsShape position-relative d-flex align-items-center justify-content-center">
                     <ImageLoader
@@ -268,7 +285,35 @@ const HighLights = ({}) => {
                     )}
                   </div>
                 </div>
-                <GetFeedAttachement feed={feed} />
+                {feed.field_type === "video" && (
+                  <VideoPlayerComponent video={feed?.video[0]?.thumbURL} />
+                )}
+                {["image", "document", "signature"].includes(
+                  feed.field_type
+                ) && (
+                  <div className="HighLightsImg position-relative">
+                    <ImageLoader
+                      src={
+                        feed.field_type === "image"
+                          ? feed?.image[0]?.thumbURL
+                          : feed.field_type === "signature"
+                          ? feed?.signature[0]?.thumbURL
+                          : feed?.document[0]?.thumbURL
+                      }
+                      quality={100}
+                      layout="fill"
+                      objectFit="contain"
+                      className="position-relative"
+                    />
+                  </div>
+                )}
+                {!["video", "image", "document", "signature"].includes(
+                  feed.field_type
+                ) && (
+                  <div className="HighLightstext">
+                    <p>{feed.text}</p>
+                  </div>
+                )}
 
                 {/* comments */}
                 <div className="Comments">
@@ -340,8 +385,9 @@ const HighLights = ({}) => {
                               as="textarea"
                               rows={1}
                               placeholder="Add a comment…"
-                              onChange={handleChangeField}
-                              value={commentMessage}
+                              onChange={(e) => handleChangeField(e, index)}
+                              onKeyDown={(e) => handleKeyDown(e, feed, index)} // Add this line
+                              value={commentMessages[index] || ""}
                               id={`commentFrm-${index}`}
                               name={`commentFrm-${index}`}
                             />
@@ -350,7 +396,7 @@ const HighLights = ({}) => {
                               <Button
                                 type="button"
                                 variant="info"
-                                onClick={() => handleCommentSubmit(feed)}
+                                onClick={() => handleCommentSubmit(feed, index)}
                               >
                                 <i className="fi-send"></i>
                               </Button>
