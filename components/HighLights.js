@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { React, useEffect, useState, useRef } from "react";
 import Button from "react-bootstrap/Button";
 import Link from "next/link";
 import ImageLoader from "../components/ImageLoader";
@@ -208,7 +208,7 @@ const HighLights = ({}) => {
   const handleKeyDown = (e, feed, feedIndex) => {
     if (e.key === "Enter" && !e.shiftKey) {
       // If Enter key is pressed without Shift key
-      e.preventDefault(); // Prevent the newline from being added
+      e.preventDefault(); // Prevent the ne wline from being added
       handleCommentSubmit(feed, feedIndex); // Submit the comment
     }
   };
@@ -228,6 +228,10 @@ const HighLights = ({}) => {
       setUserDetails(JSON.parse(storedUserDetails));
     }
   }, []);
+
+  const TextWithLinks = ({ text }) => {
+    return <p dangerouslySetInnerHTML={{ __html: text }} />;
+  };
 
   return (
     <>
@@ -311,7 +315,8 @@ const HighLights = ({}) => {
                   feed.field_type
                 ) && (
                   <div className="HighLightstext">
-                    <p>{feed.text}</p>
+                    {/* <p>{feed.text}</p> */}
+                    <TextWithLinks text={feed.text} />
                   </div>
                 )}
 
@@ -365,9 +370,13 @@ const HighLights = ({}) => {
                                       </h6>
                                     </div>
                                     <div className="CommentsBody">
-                                      <p className="m-0">
-                                        {feedComment.comment}
-                                      </p>
+                                      <span >
+                                        {feedComment.comment
+                                          .split("\n")
+                                          .map((line, index2) => (
+                                            <p className="m-0" key={index2}>{line}</p>
+                                          ))}
+                                      </span>
                                     </div>
                                   </div>
                                 </div>
