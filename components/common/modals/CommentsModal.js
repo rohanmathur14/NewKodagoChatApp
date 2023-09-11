@@ -19,7 +19,6 @@ const CommentModal = ({ show, handleClose, ...props }) => {
 
   const [userDetails, setUserDetails] = useState(null);
 
-
   const handleChangeField = async (e) => {
     const textComment = e.target.value;
     await setCommentMessage(textComment);
@@ -106,9 +105,7 @@ const CommentModal = ({ show, handleClose, ...props }) => {
       //Text
       return (
         <>
-          
-            <h4>{feed.text}</h4>
-          
+          <h4>{feed.text}</h4>
         </>
       );
     }
@@ -116,7 +113,7 @@ const CommentModal = ({ show, handleClose, ...props }) => {
 
   useEffect(() => {
     // Retrieve the user details from localStorage
-    const storedUserDetails = localStorage.getItem('userDetails');
+    const storedUserDetails = localStorage.getItem("userDetails");
 
     if (storedUserDetails) {
       // If data is found in localStorage, parse and set it in state
@@ -136,7 +133,7 @@ const CommentModal = ({ show, handleClose, ...props }) => {
         <div className="row">
           <Col lg={6} className="pe-0">
             <div className="CoomentsBoxImg position-relative">
-            <GetFeedAttachement feed={props.feedUserDetail} />
+              <GetFeedAttachement feed={props.feedUserDetail} />
             </div>
           </Col>
           <Col lg={6} className="ps-0">
@@ -181,7 +178,13 @@ const CommentModal = ({ show, handleClose, ...props }) => {
                           <h6>{formatDateTime(feedComment.created_at)}</h6>
                         </div>
                         <div className="CommentsBody">
-                          <p className="m-0">{feedComment.comment}</p>
+                          <p className="m-0">
+                            {feedComment.comment
+                              .split("\n")
+                              .map((line, index2) => (
+                                <div key={index2}>{line}</div>
+                              ))}
+                          </p>
                         </div>
                       </div>
                     </div>

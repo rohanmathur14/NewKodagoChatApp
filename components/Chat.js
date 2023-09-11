@@ -15,6 +15,8 @@ import CreateTopic from "../components/CreateTopic";
 import LightVideoImgPDF from "../components/common/modals/modalPopUp";
 
 import NewModalPopUp from "../components/common/modals/NewModalPopUp";
+import autosize from "autosize";
+
 // Image Modal
 
 import { css } from "@emotion/css";
@@ -40,7 +42,7 @@ const Chat = ({ chatGroupId }) => {
   const { register, handleSubmit, setValue } = useForm();
 
   ////
-  const [group_chat_id,setGroupCatId] = useState(0)
+  const [group_chat_id, setGroupCatId] = useState(0);
 
   const inputRef = useRef(null);
   //define the user data variable
@@ -82,18 +84,16 @@ const Chat = ({ chatGroupId }) => {
   //   setChatTopics(chatResp?.data?.topics || []);
   // };
 
-  const chatListFetcher = async (url, chatGroupId22,group_cat_id) => {
-    
+  const chatListFetcher = async (url, chatGroupId22, group_cat_id) => {
     //set the group category id zero when new group chat start other wise not
-    if(group_chat_id!==chatGroupId22)
-      group_cat_id = 0
+    if (group_chat_id !== chatGroupId22) group_cat_id = 0;
 
     var formdata = new FormData();
     formdata.append("group_id", chatGroupId22);
     formdata.append("group_cat_id", group_cat_id);
     formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
     formdata.append("Userid", userId);
-    formdata.append("Token", userToken); 
+    formdata.append("Token", userToken);
     //for pagination
     formdata.append("start", startRecord);
     formdata.append("perpage", perPage);
@@ -117,12 +117,11 @@ const Chat = ({ chatGroupId }) => {
   ];
 
   const { data: allRecords, error } = useSWR(chatDataKey, (url) =>
-    chatListFetcher(url, chatGroupId,groupCategoryId)
+    chatListFetcher(url, chatGroupId, groupCategoryId)
   );
 
   //topic wise chat listings
   const loadTheChatTopicWise = async (topicId = 0) => {
-    
     //set the group cat id
     setGroupCategoryId(topicId);
     //End
@@ -164,9 +163,12 @@ const Chat = ({ chatGroupId }) => {
     if (chatMessage && chatMessage != "") {
       //append message in chat list
       let newMessage = chatMessage;
+
       let messageObj = {
         id: 0,
         group_cat_id: "0",
+        sheet_id: "0",
+        sheet_data_id: "0",
         member_id: loginUserData.id,
         member_name: "",
         member_image: "",
@@ -189,10 +191,6 @@ const Chat = ({ chatGroupId }) => {
       formdata.append("Userid", userId);
       formdata.append("Token", userToken);
 
-      // formdata.append("Userid", userId);
-      // formdata.append("Token", uToken);
-
-      //  formdata.append("app_version", process.env.REACT_APP_VERSION);
       formdata.append("group_id", chatGroupId);
       formdata.append("msg", newMessage);
       formdata.append("group_cat_id", groupCategoryId);
@@ -203,15 +201,20 @@ const Chat = ({ chatGroupId }) => {
         //mode: 'no-cors'
       })
         .then((response) => response.json())
-        .then(async (result) => {
-          //console.log('result----->>>>',result.msg_data)
-          // setChatMessage("");
-          // let newState = [...chatListings];
-          // newState.push(result.msg_data);
-          // await setChatListings(newState);
-        });
+        .then(async (result) => {});
     }
   }
+  // const handleKeyDown = async (e) => {
+  //   console.log("Key pressed:", e.key);
+  //   console.log("Shift key pressed:", e.shiftKey);
+  //   if (e.key === "Enter" && e.shiftKey) {
+  //     e.preventDefault(); // Prevent newline in the textarea
+  //     e.stopPropagation(); // Stop event propagation
+  //   } else if (e.key === "Enter" && !e.shiftKey) {
+  //     e.preventDefault(); // Prevent form submission
+  //     await onSubmit();
+  //   }
+  // };
   const handleChangeField = async (e) => {
     const textMessage = e.target.value;
     await setChatMessage(textMessage);
@@ -345,9 +348,9 @@ const Chat = ({ chatGroupId }) => {
 
   useEffect(() => {
     if (allRecords?.data) {
-      setGroupCatId(chatGroupId) 
+      setGroupCatId(chatGroupId);
       setChatListings(allRecords.data?.chat_data?.dbdata || []);
-      setLoginUserData(allRecords.data?.loginUserData || {});      
+      setLoginUserData(allRecords.data?.loginUserData || {});
       //when click on group first time set the topic data otherwise not
       if (group_chat_id !== chatGroupId) {
         allRecords.data?.topics.unshift({ id: "0", text: "All" });
@@ -355,7 +358,6 @@ const Chat = ({ chatGroupId }) => {
       }
     }
   }, [allRecords]);
-
 
   const GetChatAttachement = ({ chat }) => {
     let fileExtension = getFileExtension(chat.attachment);
@@ -425,14 +427,45 @@ const Chat = ({ chatGroupId }) => {
     width: 640,
   });
 
-//Call every 5 second listOfChatGroup function
-useEffect(() => {
-  const interval = setInterval(async() => {   
-    await mutate(chatDataKey);
-  }, 5000);
-  return () => clearInterval(interval);
-}, []);
+  //Call every 5 second listOfChatGroup function
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      await mutate(chatDataKey);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
+  const TextWithLinks = ({ text }) => {
+    // Regular expression to match URLs
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+    // Split the text by URLs and create an array of text and links
+    const textArray = text.split(urlRegex).map((part, index) => {
+      if (part.match(urlRegex)) {
+        // Extract the actual URL from the matched part
+        const url = part.match(urlRegex)[0];
+
+        return (
+          <a href={url} target="_blank" rel="noopener noreferrer" key={index}>
+            {url}
+          </a>
+        );
+      }
+      return part;
+    });
+
+    return <p>{textArray}</p>;
+  };
+
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    autosize(textareaRef.current);
+
+    return () => {
+      autosize.destroy(textareaRef.current);
+    };
+  }, []);
 
   return (
     <>
@@ -469,7 +502,9 @@ useEffect(() => {
                             <div className="UserChatContent">
                               <div className="CtextWrapContent">
                                 <div className="Sender">{chat.member_name}</div>
-                                <div className="SenderMsg">{chat.message}</div>
+                                <div className="SenderMsg">
+                                  <TextWithLinks text={chat.message} />
+                                </div>
                                 <GetChatAttachement chat={chat} />
                                 <div className="ChatTime">
                                   {formatAmPm(
@@ -490,7 +525,10 @@ useEffect(() => {
                           <div className="ConversationList">
                             <div className="UserChatContent">
                               <div className="CtextWrapContent">
-                                <div className="SenderMsg">{chat.message}</div>
+                                <div className="SenderMsg">
+                                  {/* {chat.message} */}
+                                  <TextWithLinks text={chat.message} />
+                                </div>
                                 <GetChatAttachement chat={chat} />
                                 <div className="ChatTime">
                                   {formatAmPm(
@@ -520,10 +558,14 @@ useEffect(() => {
               <div className="MessageSentBoxInput">
                 <Form.Group controlId="text-input" className="">
                   <Form.Control
-                    type="text"
+                    ref={textareaRef}
+                    type="textarea"
+                    rows={1}
                     value={chatMessage}
                     onChange={handleChangeField}
+                  //  onKeyDown={handleKeyDown} // Listen for keydown event
                     placeholder="Type a message"
+                    name={`sendMessageFrm`}
                   />
 
                   <input
