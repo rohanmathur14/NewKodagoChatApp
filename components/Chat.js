@@ -215,6 +215,12 @@ const Chat = ({ chatGroupId }) => {
   //     await onSubmit();
   //   }
   // };
+  const handleKeyDown = async (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // Prevent form submission
+      await onSubmit();
+    }
+  };
   const handleChangeField = async (e) => {
     const textMessage = e.target.value;
     await setChatMessage(textMessage);
@@ -467,6 +473,24 @@ const Chat = ({ chatGroupId }) => {
     };
   }, []);
 
+
+  // Add a scroll listener to detect when the user reaches the top of the chat container
+    useEffect(() => {
+      console.log('chatContainerRef.current.scrollTop--',chatContainerRef.current.scrollTop)
+      const handleScroll = () => {
+        
+        if (chatContainerRef.current.scrollTop === 0) {
+          //loadMoreChatData(); // Load more data when scrolling to the top
+          console.log('Yesss on top section')
+        }
+      };
+  
+      chatContainerRef.current.addEventListener("scroll", handleScroll);
+      return () => {
+        chatContainerRef.current.removeEventListener("scroll", handleScroll);
+      };
+    }, []);
+
   return (
     <>
       {isPopupOpen && (
@@ -503,7 +527,15 @@ const Chat = ({ chatGroupId }) => {
                               <div className="CtextWrapContent">
                                 <div className="Sender">{chat.member_name}</div>
                                 <div className="SenderMsg">
-                                  <TextWithLinks text={chat.message} />
+                                  {/* <TextWithLinks text={chat.message} /> */}
+                                  {chat.message
+                                    .split("\n")
+                                    .map((line, index2) => (
+                                      <div key={index2}>
+                                        <TextWithLinks text={line} />{" "}
+                                        {/* Apply TextWithLinks to each line */}
+                                      </div>
+                                    ))}
                                 </div>
                                 <GetChatAttachement chat={chat} />
                                 <div className="ChatTime">
@@ -527,7 +559,15 @@ const Chat = ({ chatGroupId }) => {
                               <div className="CtextWrapContent">
                                 <div className="SenderMsg">
                                   {/* {chat.message} */}
-                                  <TextWithLinks text={chat.message} />
+                                  {/* <TextWithLinks text={chat.message} /> */}
+                                  {chat.message
+                                    .split("\n")
+                                    .map((line, index2) => (
+                                      <div key={index2}>
+                                        <TextWithLinks text={line} />{" "}
+                                        {/* Apply TextWithLinks to each line */}
+                                      </div>
+                                    ))}
                                 </div>
                                 <GetChatAttachement chat={chat} />
                                 <div className="ChatTime">
@@ -563,7 +603,7 @@ const Chat = ({ chatGroupId }) => {
                     rows={1}
                     value={chatMessage}
                     onChange={handleChangeField}
-                  //  onKeyDown={handleKeyDown} // Listen for keydown event
+                    onKeyDown={handleKeyDown} // Listen for keydown event
                     placeholder="Type a message"
                     name={`sendMessageFrm`}
                   />
@@ -577,7 +617,6 @@ const Chat = ({ chatGroupId }) => {
                     multiple
                   />
                 </Form.Group>
-                
               </div>
               <div className="d-flex align-items-center">
                 <div className="AttachIcon">
