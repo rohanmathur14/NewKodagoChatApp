@@ -105,7 +105,8 @@ const CommentModal = ({ show, handleClose, ...props }) => {
       //Text
       return (
         <>
-          <h4>{feed.text}</h4>
+          <HTMLTextWithLinks text={feed.text} />
+          {/* <h4>{feed.text}</h4> */}
         </>
       );
     }
@@ -120,6 +121,42 @@ const CommentModal = ({ show, handleClose, ...props }) => {
       setUserDetails(JSON.parse(storedUserDetails));
     }
   }, []);
+
+  const TextWithLinks = ({ text }) => {
+    // Regular expression to match URLs
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+    // Split the text by URLs and create an array of text and links
+    const textArray = text.split(urlRegex).map((part, index) => {
+      if (part.match(urlRegex)) {
+        // Extract the actual URL from the matched part
+        const url = part.match(urlRegex)[0];
+
+        return (
+          <a href={url} target="_blank" rel="noopener noreferrer" key={index}>
+            {url}
+          </a>
+        );
+      }
+      return part;
+    });
+
+    return <p className="m-0">{textArray}</p>;
+  };
+
+  const HTMLTextWithLinks = ({ text }) => {
+    return <h4 dangerouslySetInnerHTML={{ __html: text }} />;
+  };
+
+  // Function to handle the "keydown" event
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      // If Enter key is pressed without Shift key
+      e.preventDefault(); // Prevent the ne wline from being added
+      onSubmit(); // Submit the comment
+    }
+  };
+
   return (
     <>
       <Modal
@@ -178,13 +215,20 @@ const CommentModal = ({ show, handleClose, ...props }) => {
                           <h6>{formatDateTime(feedComment.created_at)}</h6>
                         </div>
                         <div className="CommentsBody">
-                          <p className="m-0">
+                          {/* <p className="m-0">
                             {feedComment.comment
                               .split("\n")
                               .map((line, index2) => (
                                 <div key={index2}>{line}</div>
                               ))}
-                          </p>
+                          </p> */}
+                          {feedComment.comment
+                            .split("\n")
+                            .map((line, index2) => (
+                              <div key={index2}>
+                                <TextWithLinks text={line} />{" "}
+                              </div>
+                            ))}
                         </div>
                       </div>
                     </div>
@@ -199,6 +243,7 @@ const CommentModal = ({ show, handleClose, ...props }) => {
                       rows={1}
                       placeholder="Add a comment…"
                       onChange={handleChangeField}
+                      onKeyDown={(e) => handleKeyDown(e)} // Add this line
                       name="cc"
                       value={commentMessage}
                     />

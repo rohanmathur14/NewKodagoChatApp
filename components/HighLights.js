@@ -229,10 +229,30 @@ const HighLights = ({}) => {
     }
   }, []);
 
-  const TextWithLinks = ({ text }) => {
+  const HTMLTextWithLinks = ({ text }) => {
     return <p dangerouslySetInnerHTML={{ __html: text }} />;
   };
+  const TextWithLinks = ({ text }) => {
+    // Regular expression to match URLs
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
 
+    // Split the text by URLs and create an array of text and links
+    const textArray = text.split(urlRegex).map((part, index) => {
+      if (part.match(urlRegex)) {
+        // Extract the actual URL from the matched part
+        const url = part.match(urlRegex)[0];
+
+        return (
+          <a href={url} target="_blank" rel="noopener noreferrer" key={index}>
+            {url}
+          </a>
+        );
+      }
+      return part;
+    });
+
+    return <p className="m-0">{textArray}</p>;
+  };
   return (
     <>
       {show && (
@@ -316,7 +336,7 @@ const HighLights = ({}) => {
                 ) && (
                   <div className="HighLightstext">
                     {/* <p>{feed.text}</p> */}
-                    <TextWithLinks text={feed.text} />
+                    <HTMLTextWithLinks text={feed.text} />
                   </div>
                 )}
 
@@ -324,21 +344,24 @@ const HighLights = ({}) => {
                 <div className="Comments">
                   <Row>
                     <Col lg={12}>
-                      <div className="CommentsLine d-flex align-items-center justify-content-between">
-                        <h5 className="m-0">Comments</h5>
+                      {feed.comments.total > 1 && (
+                        <div className="CommentsLine d-flex align-items-center justify-content-between">
+                          <h5 className="m-0">Comments</h5>
 
-                        {feed.comments.total > 2 && (
-                          <div className="CommentsLineRight">
-                            <Button
-                              onClick={() => allcomments(feed)}
-                              type="submit"
-                              variant="secondary"
-                            >
-                              View All Comments
-                            </Button>
-                          </div>
-                        )}
-                      </div>
+                          {feed.comments.total > 2 && (
+                            <div className="CommentsLineRight">
+                              <Button
+                                onClick={() => allcomments(feed)}
+                                type="submit"
+                                variant="secondary"
+                              >
+                                View All Comments
+                              </Button>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
                       <div className="CommentsBox">
                         {feed?.comments?.total > 0 && (
                           <div className="CommentsBoxIn">
@@ -370,11 +393,15 @@ const HighLights = ({}) => {
                                       </h6>
                                     </div>
                                     <div className="CommentsBody">
-                                      <span >
+                                      <span>
                                         {feedComment.comment
                                           .split("\n")
                                           .map((line, index2) => (
-                                            <p className="m-0" key={index2}>{line}</p>
+                                            <div key={index2}>
+                                             
+                                              <TextWithLinks text={line} />{" "}
+                                            
+                                            </div>
                                           ))}
                                       </span>
                                     </div>
