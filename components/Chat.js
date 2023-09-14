@@ -559,7 +559,7 @@ const Chat = ({ chatGroupId }) => {
                 <Form.Group controlId="text-input" className="">
                   <Form.Control
                     ref={textareaRef}
-                    type="textarea"
+                    as="textarea"
                     rows={1}
                     value={chatMessage}
                     onChange={handleChangeField}
@@ -577,19 +577,19 @@ const Chat = ({ chatGroupId }) => {
                     multiple
                   />
                 </Form.Group>
+                
+              </div>
+              <div className="d-flex align-items-center">
                 <div className="AttachIcon">
                   <span onClick={handleFileUpload}>
                     <i className="fi-attach"></i>
                   </span>
                 </div>
-              </div>
-              <div className="SendIcon d-flex align-items-center justify-content-center">
-                {/* <button type="submit">
-                  <i className="fi-send"></i>
-                </button> */}
-                <Button type="submit" variant="info">
-                  <i className="fi-send"></i>
-                </Button>
+                <div className="SendIcon d-flex align-items-center justify-content-center">
+                  <Button type="submit" variant="info">
+                    <i className="fi-send"></i>
+                  </Button>
+                </div>
               </div>
             </Form>
           </div>

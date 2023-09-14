@@ -146,6 +146,7 @@ display:flex;align-items:center;justify-content:center;background:#fff;}
 
 .Sender{color:#0060A4;font-size:14px;font-weight:500;}  
 .SenderMsg{color:#272727;font-size:13px;margin:3px 0 10px;line-height: 23px;}
+.SenderMsg p{margin:0;font-size: 13px;}
 .SenderImg{border-radius:5px;overflow:hidden;background-color:#eee;margin:5px 0;text-align:center;}
 .ChatConversation ul li.RightChat .SenderMsg{text-align:left;}
 .SenderImg img{max-width: 114px !important;cursor: pointer;}
@@ -277,14 +278,14 @@ border-left: 2px solid #8e9091;content: '';position: absolute;right:6px;top:13px
   }
 
 .MessageSentBox{margin:0 20px;padding-bottom:20px;}
-.MessageSentBoxInput{position: relative;flex:1;margin-right:30px;}
+.MessageSentBoxInput{position: relative;flex:1;margin-right:10px;}
 .SendIcon .btn-info{height:35px;width:35px;border-radius:50%;background-color:#0060A4;color:#fff;font-size:15px;
 padding:0;}
 .SendIcon .btn-info i{position: relative;top:2px;}
-.MessageSentBoxInput input{height:52px;border-radius:50px;border:0;font-size:13px;padding-right:50px;}
-.MessageSentBoxInput input::placeholder{color:#9093A3;font-size:13.5px;}
-.AttachIcon{ position: absolute; right: 15px; top: 9px; font-size:17px; cursor: pointer; height:30px; width:30px; border-radius:50%; -webkit-border-radius:50%; -moz-border-radius:50%; -ms-border-radius:50%; -o-border-radius:50%;
-  display:flex;align-items:center;justify-content:center;background-color:#dfdfdf;padding:4px;
+.MessageSentBoxInput textarea{border-radius:8px;border:0;font-size:13px;padding:15px 50px 15px 15px;}
+.MessageSentBoxInput textarea::placeholder{color:#9093A3;font-size:13.5px;}
+.AttachIcon{font-size:19px; cursor: pointer; height:30px; width:30px; border-radius:50%; -webkit-border-radius:50%; -moz-border-radius:50%; -ms-border-radius:50%; -o-border-radius:50%;
+display:flex;align-items:center;justify-content:center;padding:4px;margin-right:5px;
 }
 
 
@@ -469,7 +470,7 @@ border-radius:6px; -webkit-border-radius:6px; -moz-border-radius:6px;
 .CommentsHead h6:after{ position:absolute; width:7px; height:7px; background:#b2b2b2; content:''; 
 left:-12px; top:4px; border-radius:50% ; -webkit-border-radius:50% ; -moz-border-radius:50% ; -ms-border-radius:50% ; -o-border-radius:50% ;}
 .CommentsText{flex:1;}
-.CommentsBody p{font-size:12.5px;line-height: 21px;}
+.CommentsBody p{font-size:12.5px;line-height: 21px;word-break: break-all;}
 .CommentsText{padding-left:16px;}
 .CommentsHead {margin:0 0 3px 0;}
 .CommentsBoxLine:not(:last-child){padding-bottom:15px;margin-bottom:15px;border-bottom:dashed 1px #d9d6d6;}
@@ -493,7 +494,7 @@ background-color: #f8f8f8;background-image: -webkit-linear-gradient(top,#f8f8f8,
 line-height:35px;word-break: break-all;}
 
 /* Add File Rack css */
-.AddFileRack{height: calc(100vh - 200px);overflow: hidden;overflow-y: auto;display:flex;
+.AddFileRack{height: calc(100vh - 210px);overflow: hidden;overflow-y: auto;display:flex;
 align-items:center;justify-content:center;}
 .AddFileRackBtn button{font-size:14px;font-weight:500;padding:10px 16px;}
 .AddFileRackBtn button i{margin-right:5px;}
@@ -659,7 +660,7 @@ padding:0 0 10px 0;}
 .GridListBtn a:last-child{border-bottom-left-radius: 0;border-top-left-radius: 0;}
 .GridListBtn a.active{background-color: #cbd6e2;border-color: #7c98b6;color: #506e91;}
 .datausage h6{font-size:12px;margin:0 0 5px 0px;color:#000;font-weight:normal;}
-.datausage .progress{width:200px;}
+.datausage .progress{width:200px;background-color: #e0e0e1;}
 .ProgressText{color: #33475b;font-size:11px;}
 .FilterSecondRight .btn-outline-primary {font-size: 12px;border-radius: 3px;line-height: 14px;padding: 8px 16px;
   font-weight:500}
