@@ -362,8 +362,10 @@ const Chat = ({ chatGroupId }) => {
         allRecords.data?.topics.unshift({ id: "0", text: "All" });
         setChatTopics(allRecords.data?.topics || []);
       }
+      // Scroll to the bottom when the chatListings change
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
-  }, [allRecords]);
+  }, [allRecords, chatListings]);
 
   const GetChatAttachement = ({ chat }) => {
     let fileExtension = getFileExtension(chat.attachment);
@@ -473,9 +475,8 @@ const Chat = ({ chatGroupId }) => {
     };
   }, []);
 
-
   // Add a scroll listener to detect when the user reaches the top of the chat container
-    useEffect(() => {
+   useEffect(() => {
       console.log('chatContainerRef.current.scrollTop--',chatContainerRef.current.scrollTop)
       const handleScroll = () => {
         
@@ -500,7 +501,7 @@ const Chat = ({ chatGroupId }) => {
           onClose={closePopup}
         />
       )}
-      <div className="ChatMain overflow-hidden">
+      <div className="ChatMain overflow-hidden11">
         <div className="ProjectList">
           {/* Create Topic code here */}
           {/* <CreateTopic/> */}
@@ -512,81 +513,85 @@ const Chat = ({ chatGroupId }) => {
           />
         </div>
         <div className="ChatConversation">
-          <div className="ChatConversationList" ref={chatContainerRef}>
-            <ScrollToBottom className={ROOT_CSS + ` ${"data-container"}`}>
-              <ul className="list-unstyled mb-0">
-                {chatListings.length > 0 &&
-                  chatListings.map((chat, index) => {
-                    let fileExtension = getFileExtension(chat.attachment);
-                    //if (userId !== chat.member_id) {
-                    if (loginUserData.id !== chat.member_id) {
-                      return (
-                        <li key={index} id={"chat-id-" + index}>
-                          <div className="ConversationList">
-                            <div className="UserChatContent">
-                              <div className="CtextWrapContent">
-                                <div className="Sender">{chat.member_name}</div>
-                                <div className="SenderMsg">
-                                  {/* <TextWithLinks text={chat.message} /> */}
-                                  {chat.message
-                                    .split("\n")
-                                    .map((line, index2) => (
-                                      <div key={index2}>
-                                        <TextWithLinks text={line} />{" "}
-                                        {/* Apply TextWithLinks to each line */}
-                                      </div>
-                                    ))}
-                                </div>
-                                <GetChatAttachement chat={chat} />
-                                <div className="ChatTime">
-                                  {formatAmPm(
-                                    getDateTime(2, chat.send_at),
-                                    1,
-                                    "H:i:s",
-                                    "H:i"
-                                  )}
-                                </div>
+          <div
+            className="ChatConversationList11 chat-container11"
+            ref={chatContainerRef}
+            style={{height: `400px`,overflowY: 'auto',overflowX:'hidden',scrollBehavior: 'smooth',justifyContent: 'flex-end' /* Pushes items to the bottom */}}
+          >
+            {/* <ScrollToBottom className={ROOT_CSS + ` ${"data-container"}`}> */}
+            <ul className="list-unstyled mb-0">
+              {chatListings.length > 0 &&
+                chatListings.map((chat, index) => {
+                  let fileExtension = getFileExtension(chat.attachment);
+                  //if (userId !== chat.member_id) {
+                  if (loginUserData.id !== chat.member_id) {
+                    return (
+                      <li key={index} id={"chat-id-" + index}>
+                        <div className="ConversationList">
+                          <div className="UserChatContent">
+                            <div className="CtextWrapContent">
+                              <div className="Sender">{chat.member_name}</div>
+                              <div className="SenderMsg">
+                                {/* <TextWithLinks text={chat.message} /> */}
+                                {chat.message
+                                  .split("\n")
+                                  .map((line, index2) => (
+                                    <div key={index2}>
+                                      <TextWithLinks text={line} />{" "}
+                                      {/* Apply TextWithLinks to each line */}
+                                    </div>
+                                  ))}
+                              </div>
+                              <GetChatAttachement chat={chat} />
+                              <div className="ChatTime">
+                                {formatAmPm(
+                                  getDateTime(2, chat.send_at),
+                                  1,
+                                  "H:i:s",
+                                  "H:i"
+                                )}
                               </div>
                             </div>
                           </div>
-                        </li>
-                      );
-                    } else {
-                      return (
-                        <li className="RightChat" key={index}>
-                          <div className="ConversationList">
-                            <div className="UserChatContent">
-                              <div className="CtextWrapContent">
-                                <div className="SenderMsg">
-                                  {/* {chat.message} */}
-                                  {/* <TextWithLinks text={chat.message} /> */}
-                                  {chat.message
-                                    .split("\n")
-                                    .map((line, index2) => (
-                                      <div key={index2}>
-                                        <TextWithLinks text={line} />{" "}
-                                        {/* Apply TextWithLinks to each line */}
-                                      </div>
-                                    ))}
-                                </div>
-                                <GetChatAttachement chat={chat} />
-                                <div className="ChatTime">
-                                  {formatAmPm(
-                                    getDateTime(2, chat.send_at),
-                                    1,
-                                    "H:i:s",
-                                    "H:i"
-                                  )}
-                                </div>
+                        </div>
+                      </li>
+                    );
+                  } else {
+                    return (
+                      <li className="RightChat" key={index}>
+                        <div className="ConversationList">
+                          <div className="UserChatContent">
+                            <div className="CtextWrapContent">
+                              <div className="SenderMsg">
+                                {/* {chat.message} */}
+                                {/* <TextWithLinks text={chat.message} /> */}
+                                {chat.message
+                                  .split("\n")
+                                  .map((line, index2) => (
+                                    <div key={index2}>
+                                      <TextWithLinks text={line} />{" "}
+                                      {/* Apply TextWithLinks to each line */}
+                                    </div>
+                                  ))}
+                              </div>
+                              <GetChatAttachement chat={chat} />
+                              <div className="ChatTime">
+                                {formatAmPm(
+                                  getDateTime(2, chat.send_at),
+                                  1,
+                                  "H:i:s",
+                                  "H:i"
+                                )}
                               </div>
                             </div>
                           </div>
-                        </li>
-                      );
-                    }
-                  })}
-              </ul>
-            </ScrollToBottom>
+                        </div>
+                      </li>
+                    );
+                  }
+                })}
+            </ul>
+            {/* </ScrollToBottom> */}
           </div>
           <div className="MessageSentBox ">
             <Form
