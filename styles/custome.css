@@ -147,6 +147,7 @@ display:flex;align-items:center;justify-content:center;background:#fff;}
 .Sender{color:#0060A4;font-size:14px;font-weight:500;}  
 .SenderMsg{color:#272727;font-size:13px;margin:3px 0 10px;line-height: 23px;}
 .SenderMsg p{margin:0;font-size: 13px;}
+.SenderMsg p a{word-break: break-all;color:#086DB5;}
 .SenderImg{border-radius:5px;overflow:hidden;background-color:#eee;margin:5px 0;text-align:center;}
 .ChatConversation ul li.RightChat .SenderMsg{text-align:left;}
 .SenderImg img{max-width: 114px !important;cursor: pointer;}

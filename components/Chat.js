@@ -364,6 +364,7 @@ const Chat = ({ chatGroupId }) => {
       }
       // Scroll to the bottom when the chatListings change
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      
     }
   }, [allRecords, chatListings]);
 
@@ -516,7 +517,7 @@ const Chat = ({ chatGroupId }) => {
           <div
             className="ChatConversationList11 chat-container11"
             ref={chatContainerRef}
-            style={{height: `400px`,overflowY: 'auto',overflowX:'hidden',scrollBehavior: 'smooth',justifyContent: 'flex-end' /* Pushes items to the bottom */}}
+            style={{height: `440px`,overflowY: 'auto',overflowX:'hidden',marginBottom:`20px` /* Pushes items to the bottom */}}
           >
             {/* <ScrollToBottom className={ROOT_CSS + ` ${"data-container"}`}> */}
             <ul className="list-unstyled mb-0">
