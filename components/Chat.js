@@ -55,37 +55,52 @@ const Chat = ({ chatGroupId }) => {
 
   const chatContainerRef = useRef(null);
 
-  // const chatListingsByGroupId = async () => {
-  //   //console.log('chatListingsByGroupId--->>>>')
-  //   var formdata = new FormData();
-  //   formdata.append("group_id", chatGroupId);
+  const chatListingsByGroupId = async (topicId) => {
+    var formdata = new FormData();
+    formdata.append("group_cat_id", topicId);
+    formdata.append("group_id", chatGroupId);
+    formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
+    formdata.append("Userid", userId);
+    formdata.append("Token", userToken);
 
-  //   formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
-  //   formdata.append("Userid", userId);
-  //   formdata.append("Token", userToken);
+    // formdata.append("Userid", userId);
+    // formdata.append("Token", uToken);
+    //for pagination
+    formdata.append("start", startRecord);
+    formdata.append("perpage", perPage);
+    const getChatsRecords = await fetch(
+      process.env.NEXT_PUBLIC_API_URL + "groups/chats",
+      {
+        method: "POST",
+        body: formdata,
+        //mode: 'no-cors'
+      }
+    );
+    const chatResp = await getChatsRecords.json();
 
-  //   // formdata.append("Userid", userId);
-  //   // formdata.append("Token", uToken);
-  //   //for pagination
-  //   formdata.append("start", startRecord);
-  //   formdata.append("perpage", perPage);
-  //   const getChatsRecords = await fetch(
-  //     process.env.NEXT_PUBLIC_API_URL + "groups/chats",
-  //     {
-  //       method: "POST",
-  //       body: formdata,
-  //       //mode: 'no-cors'
-  //     }
-  //   );
-  //   const chatResp = await getChatsRecords.json();
+    setChatListings(chatResp?.data?.chat_data?.dbdata || []);
+    //set login user date
+    setLoginUserData(chatResp?.data?.loginUserData || {});
 
-  //   setChatListings(chatResp?.data?.chat_data?.dbdata || []);
-  //   //set login user date
-  //   setLoginUserData(chatResp?.data?.loginUserData || {});
-  //   //set the chat topics
-  //   setChatTopics(chatResp?.data?.topics || []);
-  // };
+    //when click on group first time set the topic data otherwise not
+    if (group_chat_id !== chatGroupId) {
+      if (chatResp.data?.topics.length > 0) {
+        chatResp.data?.topics.unshift({ id: "0", text: "All" });
+        //set the chat topics
+        setChatTopics(chatResp?.data?.topics || []);
+      }
+      // Scroll to the bottom when the chatListings change
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    } else if (group_chat_id === chatGroupId && topicId !== groupCategoryId) {
+      //if new and old groupid match but new and old topic id not match then we scroll down scroll
+      // Scroll to the bottom when the chatListings change
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  };
 
+  /*
   const chatListFetcher = async (url, chatGroupId22, group_cat_id) => {
     //set the group category id zero when new group chat start other wise not
     if (group_chat_id !== chatGroupId22) group_cat_id = 0;
@@ -120,47 +135,18 @@ const Chat = ({ chatGroupId }) => {
 
   const { data: allRecords, error } = useSWR(chatDataKey, (url) =>
     chatListFetcher(url, chatGroupId, groupCategoryId)
-  );
+  );*/
 
   //topic wise chat listings
   const loadTheChatTopicWise = async (topicId = 0) => {
     //set the group cat id
     setGroupCategoryId(topicId);
-    //End
-    // Call mutate with the key to re-fetch data
-    mutate(chatDataKey);
-
-     
-    /*
-    var formdata = new FormData();
-    formdata.append("group_cat_id", topicId);
-    formdata.append("group_id", chatGroupId);
-    formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
-
-    formdata.append("Userid", userId);
-    formdata.append("Token", userToken);
-
-    // formdata.append("Userid", userId);
-    // formdata.append("Token", uToken);
-
-    // formdata.append("app_version", process.env.REACT_APP_VERSION);
-    //for pagination
-    formdata.append("start", startRecord);
-    formdata.append("perpage", perPage);
-    const getChatsRecords = await fetch(
-      process.env.NEXT_PUBLIC_API_URL + "groups/chats",
-      {
-        method: "POST",
-        body: formdata,
-        //mode: 'no-cors'
-      }
-    );
-    const chatResp = await getChatsRecords.json();
-    setChatListings(chatResp?.data?.chat_data?.dbdata || []);*/
-
-    //   setChatListings(chatListings.filter(chat => {
-    //     return chat.group_cat_id === topicId || chat.group_cat_id ==0;
-    //   }))
+    //start page set 0
+    setStartRecord(0);
+    //per page set 20
+    setPerPage(20);
+    //call the api
+    chatListingsByGroupId(topicId);
   };
 
   async function onSubmit(values) {
@@ -208,17 +194,7 @@ const Chat = ({ chatGroupId }) => {
         .then(async (result) => {});
     }
   }
-  // const handleKeyDown = async (e) => {
-  //   console.log("Key pressed:", e.key);
-  //   console.log("Shift key pressed:", e.shiftKey);
-  //   if (e.key === "Enter" && e.shiftKey) {
-  //     e.preventDefault(); // Prevent newline in the textarea
-  //     e.stopPropagation(); // Stop event propagation
-  //   } else if (e.key === "Enter" && !e.shiftKey) {
-  //     e.preventDefault(); // Prevent form submission
-  //     await onSubmit();
-  //   }
-  // };
+
   const handleKeyDown = async (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault(); // Prevent form submission
@@ -348,15 +324,13 @@ const Chat = ({ chatGroupId }) => {
   //set the chat listings and topics drop down when click on group
   useEffect(() => {
     //Call the function
-    //chatListingsByGroupId();
-    //
     if (chatGroupId) {
-      //setStartRecord(0);
-      // Call mutate with the key to re-fetch data
-      mutate(chatDataKey);
+      setGroupCatId(chatGroupId);
+      chatListingsByGroupId();
     }
   }, [chatGroupId]);
 
+  /*
   useEffect(() => {
     if (allRecords?.data) {
       setGroupCatId(chatGroupId);
@@ -374,7 +348,7 @@ const Chat = ({ chatGroupId }) => {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
-  }, [allRecords, chatGroupId, group_chat_id]);
+  }, [allRecords, chatGroupId, group_chat_id]);*/
 
   const GetChatAttachement = ({ chat }) => {
     let fileExtension = getFileExtension(chat.attachment);
@@ -451,7 +425,6 @@ const Chat = ({ chatGroupId }) => {
     }, 5000);
     return () => clearInterval(interval);
   }, []);*/
-
 
   /*
   useEffect(() => {
@@ -559,9 +532,9 @@ const Chat = ({ chatGroupId }) => {
       // Check if the user is near the top (e.g., within 50 pixels) and not loading older messages.
       //if (!loadingOlderMessages && scrollTop < 50) {
       if (!loadingOlderMessages && chatContainerRef.current.scrollTop === 0) {
-        //console.log("Yesss on top section");
+        console.log("Yesss on top section");
         setLoadingOlderMessages(true);
-
+        /*
         // Load more chat data
         const newStartRecord = startRecord + perPage;
         setStartRecord(newStartRecord);
@@ -580,7 +553,7 @@ const Chat = ({ chatGroupId }) => {
           ...chatListings,
         ];
 
-        setChatListings(updatedChatListings);
+        setChatListings(updatedChatListings);*/
         setLoadingOlderMessages(false);
       }
     };
@@ -590,7 +563,7 @@ const Chat = ({ chatGroupId }) => {
     return () => {
       chatContainerRef.current.removeEventListener("scroll", handleScroll);
     };
-  }, [startRecord, chatListFetcher, loadingOlderMessages]);
+  }, [startRecord, loadingOlderMessages]);
 
   //console.log("chatListings----->>>>>>", chatListings);
   return (
