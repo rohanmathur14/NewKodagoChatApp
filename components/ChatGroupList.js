@@ -10,14 +10,14 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import { getDateTime, formatAmPm } from "../helper/helper";
 import useSWR from "swr";
-import { useUserContext } from '../components/UserContext';
+import { useUserContext } from "../components/UserContext";
 
 const ChatGroupList = ({ setGroupID }) => {
   const [showContent, setShowContent] = useState(true);
   const [pageIndex, setPageIndex] = useState(1);
   const [kogdagoGroupList, setKogdagoGroupList] = useState([]);
   const [selectedGroupChatId, setSelectedGroupChatId] = useState(0);
-  const { userId, userToken } = useUserContext();  
+  const { userId, userToken } = useUserContext();
 
   const handleClick = () => {
     setShowContent(!showContent);
@@ -28,7 +28,7 @@ const ChatGroupList = ({ setGroupID }) => {
     formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
 
     formdata.append("Userid", userId);
-    formdata.append("Token", userToken); 
+    formdata.append("Token", userToken);
 
     //formdata.append("app_version", process.env.REACT_APP_VERSION);
     const getGroupRecords = await fetch(url, {
@@ -47,14 +47,16 @@ const ChatGroupList = ({ setGroupID }) => {
 
   //searching function in the group by name
   const SearchGroupByName = (e) => {
-    const keyword = e.target.value;
-    if (keyword != "" && keyword !== undefined && keyword != null) {
-      const filtered = kogdagoGroupList.filter((entry) =>
-        entry.name.toLowerCase().includes(keyword.toLowerCase())
+    const keyword = e.target.value.toLowerCase(); // Convert the keyword to lowercase for case-insensitive search
+
+    if (keyword != "" && keyword !== undefined && keyword !== null) {
+      const filtered = groupListngs.filter((entry) =>
+        entry.name.toLowerCase().includes(keyword)
       );
+
       setKogdagoGroupList(filtered || []);
     } else {
-      //get all record when keyword is empty
+      // Get all records when keyword is empty
       setKogdagoGroupList(groupListngs);
     }
   };
@@ -73,7 +75,6 @@ const ChatGroupList = ({ setGroupID }) => {
     }
   }, [groupListngs]);
 
-  
   return (
     <>
       <div className="ChatGroupList">
