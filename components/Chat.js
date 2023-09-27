@@ -40,6 +40,7 @@ const Chat = ({ chatGroupId }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   //define the chat message variable
   const { register, handleSubmit, setValue } = useForm();
+  const [isLoading, setIsLoading] = useState(false);
 
   ////
   const [group_chat_id, setGroupCatId] = useState(0);
@@ -55,18 +56,25 @@ const Chat = ({ chatGroupId }) => {
 
   const chatContainerRef = useRef(null);
 
-  const chatListingsByGroupId = async (topicId) => {
+  const chatListingsByGroupId = async (topicId = 0) => {
+    setIsLoading(true);
     var formdata = new FormData();
     formdata.append("group_cat_id", topicId);
     formdata.append("group_id", chatGroupId);
     formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
     formdata.append("Userid", userId);
     formdata.append("Token", userToken);
+    //console.log('topicId------',topicId)
+    //console.log('groupCategoryId------',groupCategoryId)
 
-    // formdata.append("Userid", userId);
-    // formdata.append("Token", uToken);
-    //for pagination
-    formdata.append("start", startRecord);
+    if (topicId !== groupCategoryId) {
+      //for pagination
+      formdata.append("start", 0);
+    } else {
+      //for pagination
+      formdata.append("start", startRecord);
+    }
+
     formdata.append("perpage", perPage);
     const getChatsRecords = await fetch(
       process.env.NEXT_PUBLIC_API_URL + "groups/chats",
@@ -77,14 +85,15 @@ const Chat = ({ chatGroupId }) => {
       }
     );
     const chatResp = await getChatsRecords.json();
-
     setChatListings(chatResp?.data?.chat_data?.dbdata || []);
+
     //set login user date
     setLoginUserData(chatResp?.data?.loginUserData || {});
-
+    //loading false
+    setIsLoading(false);
     //when click on group first time set the topic data otherwise not
     if (group_chat_id !== chatGroupId) {
-      if (chatResp.data?.topics.length > 0) {
+      if (chatResp.data?.topics?.length > 0) {
         chatResp.data?.topics.unshift({ id: "0", text: "All" });
         //set the chat topics
         setChatTopics(chatResp?.data?.topics || []);
@@ -139,14 +148,17 @@ const Chat = ({ chatGroupId }) => {
 
   //topic wise chat listings
   const loadTheChatTopicWise = async (topicId = 0) => {
+    //console.log('loadTheChatTopicWise topicId--------',topicId)
     //set the group cat id
     setGroupCategoryId(topicId);
+
     //start page set 0
     setStartRecord(0);
     //per page set 20
-    setPerPage(20);
+    //setPerPage(20);
     //call the api
     chatListingsByGroupId(topicId);
+    //console.log('scrollHeight------',chatContainerRef.current.scrollHeight)
   };
 
   async function onSubmit(values) {
@@ -330,26 +342,6 @@ const Chat = ({ chatGroupId }) => {
     }
   }, [chatGroupId]);
 
-  /*
-  useEffect(() => {
-    if (allRecords?.data) {
-      setGroupCatId(chatGroupId);
-      //setChatListings(allRecords.data?.chat_data?.dbdata || []);
-      // Combine the new chat data with the existing chatListings
-      const newChatData = allRecords.data?.chat_data?.dbdata || [];
-      setChatListings(newChatData);
-      setLoginUserData(allRecords.data?.loginUserData || {});
-      //when click on group first time set the topic data otherwise not
-      if (group_chat_id !== chatGroupId) { 
-        allRecords.data?.topics.unshift({ id: "0", text: "All" });
-        setChatTopics(allRecords.data?.topics || []);
-      }
-      // Scroll to the bottom when the chatListings change
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
-    }
-  }, [allRecords, chatGroupId, group_chat_id]);*/
-
   const GetChatAttachement = ({ chat }) => {
     let fileExtension = getFileExtension(chat.attachment);
     return (
@@ -419,36 +411,34 @@ const Chat = ({ chatGroupId }) => {
   });
 
   //Call every 5 second listOfChatGroup function
-  /*useEffect(() => {
-    const interval = setInterval(async () => {
-      await mutate(chatDataKey);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);*/
-
-  /*
   useEffect(() => {
     const interval = setInterval(async () => {
-      // Fetch newer messages
-      const newData = await chatListFetcher(
-        chatDataKey[0],
-        chatGroupId,
-        groupCategoryId,
-        startRecord, // Start from the current record
-        perPage
+      var formdata = new FormData();
+      formdata.append("group_cat_id", groupCategoryId);
+      formdata.append("group_id", chatGroupId);
+      formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
+      formdata.append("Userid", userId);
+      formdata.append("Token", userToken);
+      formdata.append("start", 0);
+      if (startRecord > 0) {
+        formdata.append("perpage", startRecord);
+      } else {
+        formdata.append("perpage", perPage);
+      }
+
+      const getChatsRecords = await fetch(
+        process.env.NEXT_PUBLIC_API_URL + "groups/chats",
+        {
+          method: "POST",
+          body: formdata,
+        }
       );
-
-      // Combine the new data with the older data
-      const updatedChatListings = [
-        ...(newData.data?.chat_data?.dbdata || []),
-        ...chatListings,
-      ];
-
-      setChatListings(updatedChatListings);
+      const chatResp = await getChatsRecords.json();
+      setChatListings(chatResp?.data?.chat_data?.dbdata || []);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [chatGroupId, groupCategoryId, startRecord]);*/
+  }, [chatGroupId, groupCategoryId, startRecord]);
 
   const TextWithLinks = ({ text }) => {
     // Regular expression to match URLs
@@ -473,7 +463,7 @@ const Chat = ({ chatGroupId }) => {
   };
 
   //load more chat data
-  const loadMoreChatData = async () => {
+  const loadMoreChatData22 = async () => {
     const newStartRecord = startRecord + perPage;
     setStartRecord(newStartRecord);
 
@@ -489,8 +479,41 @@ const Chat = ({ chatGroupId }) => {
       ...(moreChatData.data?.chat_data?.dbdata || []),
       ...chatListings,
     ];
-    console.log("updatedChatListings-----", updatedChatListings);
+
     setChatListings(updatedChatListings);
+  };
+
+  const loadMoreChatData = async () => {
+    const newStartRecord = startRecord + perPage;
+    setStartRecord(newStartRecord);
+
+    var formdata = new FormData();
+    formdata.append("group_cat_id", groupCategoryId);
+    formdata.append("group_id", chatGroupId);
+    formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
+    formdata.append("Userid", userId);
+    formdata.append("Token", userToken);
+    //for pagination
+    formdata.append("start", newStartRecord);
+    formdata.append("perpage", perPage);
+    const getChatsRecords = await fetch(
+      process.env.NEXT_PUBLIC_API_URL + "groups/chats",
+      {
+        method: "POST",
+        body: formdata,
+        //mode: 'no-cors'
+      }
+    );
+    const chatResp = await getChatsRecords.json();
+    if (newStartRecord > 0) {
+      const updatedChatListings = [
+        ...(chatResp.data?.chat_data?.dbdata || []),
+        ...chatListings,
+      ];
+      setChatListings(updatedChatListings);
+    } else {
+      setChatListings(chatResp.data?.chat_data?.dbdata || []);
+    }
   };
 
   const textareaRef = useRef(null);
@@ -503,69 +526,37 @@ const Chat = ({ chatGroupId }) => {
     };
   }, []);
 
-  // Add a scroll listener to detect when the user reaches the top of the chat container
-  /*
-  useEffect(() => {
-    console.log(
-      "chatContainerRef.current.scrollTop--",
-      chatContainerRef.current.scrollTop
-    );
-    const handleScroll = () => {
-      if (chatContainerRef.current.scrollTop === 0) {
-        loadMoreChatData(); // Load more data when scrolling to the top
-        console.log("Yesss on top section");
-      }
-    };
-
-    chatContainerRef.current.addEventListener("scroll", handleScroll);
-    return () => {
-      chatContainerRef.current.removeEventListener("scroll", handleScroll);
-    };
-  }, [startRecord, chatListFetcher]);*/
-
   useEffect(() => {
     const handleScroll = async () => {
       const scrollTop = chatContainerRef.current.scrollTop;
       const scrollHeight = chatContainerRef.current.scrollHeight;
       const clientHeight = chatContainerRef.current.clientHeight;
-
+      // console.log("Yesss on scrollTop---", scrollTop);
+      // console.log("Yesss on scrollHeight---", scrollHeight);
+      // console.log("Yesss on clientHeight---", clientHeight);
       // Check if the user is near the top (e.g., within 50 pixels) and not loading older messages.
       //if (!loadingOlderMessages && scrollTop < 50) {
-      if (!loadingOlderMessages && chatContainerRef.current.scrollTop === 0) {
+      if (
+        !loadingOlderMessages &&
+        chatContainerRef.current.scrollTop === 0 &&
+        scrollHeight !== 440
+      ) {
         console.log("Yesss on top section");
         setLoadingOlderMessages(true);
-        /*
-        // Load more chat data
-        const newStartRecord = startRecord + perPage;
-        setStartRecord(newStartRecord);
-
-        const moreChatData = await chatListFetcher(
-          chatDataKey[0], // Use the same API URL
-          chatGroupId,
-          groupCategoryId,
-          newStartRecord, // Pass the current start record index
-          perPage
-        );
-
-        // Create a new array with older messages at the beginning and spread chatListings
-        const updatedChatListings = [
-          ...(moreChatData.data?.chat_data?.dbdata || []),
-          ...chatListings,
-        ];
-
-        setChatListings(updatedChatListings);*/
+        loadMoreChatData(); //load more chat
         setLoadingOlderMessages(false);
       }
     };
-
     chatContainerRef.current.addEventListener("scroll", handleScroll);
 
     return () => {
       chatContainerRef.current.removeEventListener("scroll", handleScroll);
     };
-  }, [startRecord, loadingOlderMessages]);
+  }, [startRecord, loadingOlderMessages, chatListings]);
 
-  //console.log("chatListings----->>>>>>", chatListings);
+  // console.log("chatListings----->>>>>>", chatListings);
+  // console.log("startRecord----->>>>>>", startRecord);
+  // console.log("loadingOlderMessages----->>>>>>", loadingOlderMessages);
   return (
     <>
       {isPopupOpen && (
@@ -597,86 +588,97 @@ const Chat = ({ chatGroupId }) => {
               marginBottom: `20px` /* Pushes items to the bottom */,
             }}
           >
-            {/* <ScrollToBottom className={ROOT_CSS + ` ${"data-container"}`}> */}
-            <ul className="list-unstyled mb-0">
-              {chatListings.length > 0 &&
-                chatListings.map((chat, index) => {
-                  let fileExtension = getFileExtension(chat.attachment);
-                  //if (userId !== chat.member_id) {
-                  if (loginUserData.id !== chat.member_id) {
-                    return (
-                      <li key={index} id={"chat-id-" + chat.id}>
-                        <div className="ConversationList">
-                          <div className="UserChatContent">
-                            <div className="CtextWrapContent">
-                              <div className="Sender">{chat.member_name}</div>
-                              <div className="SenderMsg">
-                                {/* <TextWithLinks text={chat.message} /> */}
-                                {chat?.message &&
-                                  chat.message
-                                    .split("\n")
-                                    .map((line, index2) => (
-                                      <div key={index2}>
-                                        <TextWithLinks text={line} />{" "}
-                                        {/* Apply TextWithLinks to each line */}
-                                      </div>
-                                    ))}
-                              </div>
-                              <GetChatAttachement chat={chat} />
-                              <div className="ChatTime">
-                                {formatAmPm(
-                                  getDateTime(2, chat.send_at),
-                                  1,
-                                  "H:i:s",
-                                  "H:i"
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    );
-                  } else {
-                    return (
-                      <li
-                        className="RightChat"
-                        id={"chat-id-" + chat.id}
-                        key={index}
-                      >
-                        <div className="ConversationList">
-                          <div className="UserChatContent">
-                            <div className="CtextWrapContent">
-                              <div className="SenderMsg">
-                                {/* {chat.message} */}
-                                {/* <TextWithLinks text={chat.message} /> */}
-                                {chat?.message &&
-                                  chat.message
-                                    .split("\n")
-                                    .map((line, index2) => (
-                                      <div key={index2}>
-                                        <TextWithLinks text={line} />{" "}
-                                        {/* Apply TextWithLinks to each line */}
-                                      </div>
-                                    ))}
-                              </div>
-                              <GetChatAttachement chat={chat} />
-                              <div className="ChatTime">
-                                {formatAmPm(
-                                  getDateTime(2, chat.send_at),
-                                  1,
-                                  "H:i:s",
-                                  "H:i"
-                                )}
+            {isLoading == true ? (
+              <span
+                style={{
+                  textAlign: "center",
+                  marginTop: "200px",
+                  marginLeft: "270px",
+                  position: "absolute",
+                }}
+              >
+                Loading...
+              </span>
+            ) : (
+              <ul className="list-unstyled mb-0">
+                {chatListings.length > 0 &&
+                  chatListings.map((chat, index) => {
+                    let fileExtension = getFileExtension(chat.attachment);
+                    //if (userId !== chat.member_id) {
+                    if (loginUserData.id !== chat.member_id) {
+                      return (
+                        <li key={index} id={"chat-id-" + chat.id}>
+                          <div className="ConversationList">
+                            <div className="UserChatContent">
+                              <div className="CtextWrapContent">
+                                <div className="Sender">{chat.member_name}</div>
+                                <div className="SenderMsg">
+                                  {/* <TextWithLinks text={chat.message} /> */}
+                                  {chat?.message &&
+                                    chat.message
+                                      .split("\n")
+                                      .map((line, index2) => (
+                                        <div key={index2}>
+                                          <TextWithLinks text={line} />{" "}
+                                          {/* Apply TextWithLinks to each line */}
+                                        </div>
+                                      ))}
+                                </div>
+                                <GetChatAttachement chat={chat} />
+                                <div className="ChatTime">
+                                  {formatAmPm(
+                                    getDateTime(2, chat.send_at),
+                                    1,
+                                    "H:i:s",
+                                    "H:i"
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </li>
-                    );
-                  }
-                })}
-            </ul>
-            {/* </ScrollToBottom> */}
+                        </li>
+                      );
+                    } else {
+                      return (
+                        <li
+                          className="RightChat"
+                          id={"chat-id-" + chat.id}
+                          key={index}
+                        >
+                          <div className="ConversationList">
+                            <div className="UserChatContent">
+                              <div className="CtextWrapContent">
+                                <div className="SenderMsg">
+                                  {/* {chat.message} */}
+                                  {/* <TextWithLinks text={chat.message} /> */}
+                                  {chat?.message &&
+                                    chat.message
+                                      .split("\n")
+                                      .map((line, index2) => (
+                                        <div key={index2}>
+                                          <TextWithLinks text={line} />{" "}
+                                          {/* Apply TextWithLinks to each line */}
+                                        </div>
+                                      ))}
+                                </div>
+                                <GetChatAttachement chat={chat} />
+                                <div className="ChatTime">
+                                  {formatAmPm(
+                                    getDateTime(2, chat.send_at),
+                                    1,
+                                    "H:i:s",
+                                    "H:i"
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      );
+                    }
+                  })}
+              </ul>
+            )}
           </div>
           <div className="MessageSentBox ">
             <Form
