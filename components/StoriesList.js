@@ -7,7 +7,7 @@ import { Col, Row } from "react-bootstrap";
 import ListGroup from "react-bootstrap/ListGroup";
 import Modal from "react-bootstrap/Modal";
 import Stories from "react-insta-stories";
-import { useUserContext } from "../components/UserContext";
+//import { useUserContext } from "../components/UserContext";
 import { TimeAgo } from "../helper/helper";
 // Swiper code here
 
@@ -20,13 +20,19 @@ import useSWR from "swr";
 
 SwiperCore.use([Navigation, Pagination, Mousewheel]);
 
-const StoriesList = ({}) => {
+const StoriesList = (props) => {
+  //console.log('props----',props.loginUserTokenAndUserId.userId)
   const [storyUserListings, setStoryUserListings] = useState([]);
   //get the userid and user token from userProvider
-  const { userId, userToken } = useUserContext();
+  //const { userId, userToken } = useUserContext();
+  const [userId, setUserId] = useState(props?.loginUserTokenAndUserId?.userId || '');
+  const [userToken, setUserToken] = useState(props?.loginUserTokenAndUserId?.userToken || '');
+
   const [stories, setStories] = useState([]);
 
   const [pageIndex, setPageIndex] = useState(1);
+
+
 
   const loadTheStoryListings = async () => {
     var formdata = new FormData();
@@ -49,6 +55,7 @@ const StoriesList = ({}) => {
   };
 
   const storyListFetcher = async (url) => {
+     
     var formdata = new FormData();
     formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
     formdata.append("Userid", userId);
@@ -61,6 +68,7 @@ const StoriesList = ({}) => {
     });
     return await getStoryRecords.json();
   };
+  
   const { data: allRecords, error } = useSWR(
     [`${process.env.NEXT_PUBLIC_API_URL}groups/feeds`, pageIndex],
     storyListFetcher
@@ -69,13 +77,24 @@ const StoriesList = ({}) => {
   const storyListngs = allRecords?.data?.stories || [];
   const userDetails = allRecords?.userDetail || {};
 
-
+  useEffect(() => {
+    if (props.loginUserTokenAndUserId) {
+      setUserId(props.loginUserTokenAndUserId.userId);
+      setUserToken(props.loginUserTokenAndUserId.userToken);
+    }
+  }, [props.loginUserTokenAndUserId]);
 
   useEffect(() => {
     //Call the function
     //loadTheStoryListings();
-  }, []);
+    const getStoredUserLoginTokenDetails = JSON.parse(window.localStorage.getItem('loginUserToken')); 
+    if (getStoredUserLoginTokenDetails)
+    setUserToken(getStoredUserLoginTokenDetails.userId);
+    setUserId(getStoredUserLoginTokenDetails.userToken);
+  }, [userId,userToken]);
 
+  console.log('userId',userId)
+  console.log('userToken',userToken)
   // Swiper code here
 
   //  modal change on arrow

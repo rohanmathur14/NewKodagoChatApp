@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import RackView from "../../components/racks/RackView";
 import { FileRackProvider } from "../../components/FileRackContext";
+import TopBar from "../../components/TopBar";
 
 const FileRackRecordsPage = (props) => {
   const router = useRouter();
@@ -17,7 +18,10 @@ const FileRackRecordsPage = (props) => {
   return (
     <>
       <FileRackProvider sheetId={sheet_id} groupId={groupId}  userId={userId} userToken={userToken}>
+      <section>
+        <TopBar/>
         <RackView/>
+      </section>
       </FileRackProvider>
     </>
   );

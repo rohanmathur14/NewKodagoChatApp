@@ -5,18 +5,19 @@ import ImageLoader from "../components/ImageLoader";
 import Form from "react-bootstrap/Form";
 import { Col, Row } from "react-bootstrap";
 import StoriesList from "../components/StoriesList";
-import ProfileRight from "../components/ProfileRight"; 
-import { useUserContext } from "../components/UserContext";
+import ProfileRight from "../components/ProfileRight";
+//import { useUserContext } from "../components/UserContext";
 
 const TopBar = ({}) => {
   const [loginUserDetails, setLoginUserDetails] = useState();
-  const { userId, userToken } = useUserContext(); 
-  
+  //const { userId, userToken } = useUserContext();
+  const [loginUserTokenAndUserId, setLoginUserTokenAndUserId] = useState();
+
   const loadTheUserDetails = async () => {
     var formdata = new FormData();
     formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
-    formdata.append("Userid", userId);
-    formdata.append("Token", userToken);
+    formdata.append("Userid", loginUserTokenAndUserId.userId);
+    formdata.append("Token", loginUserTokenAndUserId.userToken);
     formdata.append("get_stories", 1);
     const getChatsRecords = await fetch(
       process.env.NEXT_PUBLIC_API_URL + "groups/feeds",
@@ -29,19 +30,32 @@ const TopBar = ({}) => {
 
     const storiesResp = await getChatsRecords.json();
     setLoginUserDetails(storiesResp?.userDetail || {});
-     // Store the data in localStorage
-     window.localStorage.setItem('userDetails', JSON.stringify(storiesResp?.userDetail || {}));
+    // Store the data in localStorage
+    window.localStorage.setItem(
+      "userDetails",
+      JSON.stringify(storiesResp?.userDetail || {})
+    );
   };
 
   useEffect(() => {
+     
+    const getStoredUserLoginTokenDetails = JSON.parse(window.localStorage.getItem('loginUserToken'));
+
+    if (getStoredUserLoginTokenDetails)
+      setLoginUserTokenAndUserId(getStoredUserLoginTokenDetails);
+  }, []);
+
+  useEffect(() => {
     // Check if the data is already in localStorage before making a network request
-    const storedUserDetails = localStorage.getItem('userDetails');
+    const storedUserDetails = localStorage.getItem("userDetails");
     if (storedUserDetails) {
       setLoginUserDetails(JSON.parse(storedUserDetails));
     } else {
       loadTheUserDetails();
     }
-  }, [userId, userToken]);
+  }, [loginUserTokenAndUserId]);
+
+  //console.log('loginUserTokenAndUserId----',loginUserTokenAndUserId)
 
   return (
     <>
@@ -63,7 +77,7 @@ const TopBar = ({}) => {
               </div>
             </Col>
             <Col lg={"5"}>
-              <StoriesList />
+              <StoriesList loginUserTokenAndUserId={loginUserTokenAndUserId} />
             </Col>
             <Col lg={"4"}>
               <ProfileRight userDetails={loginUserDetails} />

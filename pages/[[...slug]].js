@@ -32,7 +32,9 @@ const HomeAltPage = (props) => {
     // Check if both slug arguments are available
     if (slug && slug.length === 2) {
       // Perform any necessary data fetching or processing here
-
+      // Store the data in localStorage
+      const userData = { userId: userId, userToken: userToken };
+      window.localStorage.setItem('loginUserToken', JSON.stringify(userData));      
       // Simulate loading for demonstration purposes (you can remove this)
       setTimeout(() => {
         setLoading(false);
