@@ -54,12 +54,12 @@ const StoriesList = (props) => {
     //console.log("chatResp---->>>", storiesResp?.data?.stories);
   };
 
-  const storyListFetcher = async (url) => {
+  const storyListFetcher = async (url,userId1, userToken1) => {
      
     var formdata = new FormData();
     formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
-    formdata.append("Userid", userId);
-    formdata.append("Token", userToken);
+    formdata.append("Userid", userId1);
+    formdata.append("Token", userToken1);
     formdata.append("get_stories", 1); 
     const getStoryRecords = await fetch(url, {
       method: "POST",
@@ -70,8 +70,8 @@ const StoriesList = (props) => {
   };
   
   const { data: allRecords, error } = useSWR(
-    [`${process.env.NEXT_PUBLIC_API_URL}groups/feeds`, pageIndex],
-    storyListFetcher
+    userId && userToken ? [`${process.env.NEXT_PUBLIC_API_URL}groups/feeds`, userId, userToken] : null,
+    (url, userId, userToken) => storyListFetcher(url, userId, userToken),
   );
 
   const storyListngs = allRecords?.data?.stories || [];
@@ -84,17 +84,12 @@ const StoriesList = (props) => {
     }
   }, [props.loginUserTokenAndUserId]);
 
-  useEffect(() => {
-    //Call the function
-    //loadTheStoryListings();
-    const getStoredUserLoginTokenDetails = JSON.parse(window.localStorage.getItem('loginUserToken')); 
-    if (getStoredUserLoginTokenDetails)
-    setUserToken(getStoredUserLoginTokenDetails.userId);
-    setUserId(getStoredUserLoginTokenDetails.userToken);
-  }, [userId,userToken]);
 
-  console.log('userId',userId)
-  console.log('userToken',userToken)
+
+
+
+  // console.log('userId',userId)
+  // console.log('userToken',userToken)
   // Swiper code here
 
   //  modal change on arrow
