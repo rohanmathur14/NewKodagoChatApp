@@ -111,15 +111,16 @@ const [openItemId, setOpenItemId] = useState(null);
     };
   
     const renderTopic = (item) => (
-      <li key={item.id} onClick={(e) => handleClick(item.id,e)}>
-        <div className="TopicMain">
+      <li key={item.id} onClick={(e) => handleClick(item.id,e)} >
+        <div className={(item.text === 'All' || !item?.nodes)  ? 'hideTopicArrow TopicMain' : 'TopicMain'}>
           <h5>{item.text}</h5>
           {item.nodes && item.nodes.length > 0 && (
             <div className="TopicSub mt-0 ms-0">
               {item.nodes.map((subItem) => (
                 <div
                   key={subItem.id}
-                  className="TopicSubList"
+                  //className="TopicSubList"
+                  className={subItem.nodes && subItem.nodes.length > 0 ? 'TopicSubList' : 'TopicSubList hideTopicArrow'}
                   onClick={(e) => handleClick(subItem.id,e)}
                 >
                   {subItem.text}
