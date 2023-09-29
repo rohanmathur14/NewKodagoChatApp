@@ -411,34 +411,34 @@ const Chat = ({ chatGroupId }) => {
   });
 
   //Call every 5 second listOfChatGroup function
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      var formdata = new FormData();
-      formdata.append("group_cat_id", groupCategoryId);
-      formdata.append("group_id", chatGroupId);
-      formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
-      formdata.append("Userid", userId);
-      formdata.append("Token", userToken);
-      formdata.append("start", 0);
-      if (startRecord > 0) {
-        formdata.append("perpage", startRecord);
-      } else {
-        formdata.append("perpage", perPage);
-      }
+  // useEffect(() => {
+  //   const interval = setInterval(async () => {
+  //     var formdata = new FormData();
+  //     formdata.append("group_cat_id", groupCategoryId);
+  //     formdata.append("group_id", chatGroupId);
+  //     formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
+  //     formdata.append("Userid", userId);
+  //     formdata.append("Token", userToken);
+  //     formdata.append("start", 0);
+  //     if (startRecord > 0) {
+  //       formdata.append("perpage", startRecord);
+  //     } else {
+  //       formdata.append("perpage", perPage);
+  //     }
 
-      const getChatsRecords = await fetch(
-        process.env.NEXT_PUBLIC_API_URL + "groups/chats",
-        {
-          method: "POST",
-          body: formdata,
-        }
-      );
-      const chatResp = await getChatsRecords.json();
-      setChatListings(chatResp?.data?.chat_data?.dbdata || []);
-    }, 5000);
+  //     const getChatsRecords = await fetch(
+  //       process.env.NEXT_PUBLIC_API_URL + "groups/chats",
+  //       {
+  //         method: "POST",
+  //         body: formdata,
+  //       }
+  //     );
+  //     const chatResp = await getChatsRecords.json();
+  //     setChatListings(chatResp?.data?.chat_data?.dbdata || []);
+  //   }, 5000);
 
-    return () => clearInterval(interval);
-  }, [chatGroupId, groupCategoryId, startRecord]);
+  //   return () => clearInterval(interval);
+  // }, [chatGroupId, groupCategoryId, startRecord]);
 
   const TextWithLinks = ({ text }) => {
     // Regular expression to match URLs

@@ -25,6 +25,9 @@ import DeleteRecord from "../racks/DeleteRecord";
 import RacksCommentsList from "../racks//RacksCommentsList";
 import RacksAssignment from "../racks/RacksAssignment";
 import RacksHistory from "../racks/RacksHistory";
+import RecoredImageView from "../racks/RecoredImageView";
+import RecoredDocumentView from "../racks/RecoredDocumentView";
+import RecoredMapView from "../racks/RecoredMapView";
 import Form from "react-bootstrap/Form";
 
 const RacksListView = ({
@@ -83,6 +86,21 @@ const RacksListView = ({
   const handleHistoryClose = () => historysetShow(false);
   const handleHistoryShow = () => historysetShow(true);
 
+  // Images Modal Code Here
+  const [imgshowpopup, setimgshowpopup] = useState(false);
+  const handleImgPopupShow = () => {setimgshowpopup(true);};
+  const handleImgPopupShowClose = () => {setimgshowpopup(false);};
+
+  // Document Modal Code Here
+  const [docshowpopup, setdocshowpopup] = useState(false);
+  const handleDocPopupShow = () => {setdocshowpopup(true);};
+  const handleDocPopupShowClose = () => {setdocshowpopup(false);};
+
+  // Document Modal Code Here
+  // const [mapshowpopup, setmapshowpopup] = useState(false);
+  // const handleMapPopupShow = () => {setmapshowpopup(true);};
+  // const handleMapPopupShowClose = () => {setmapshowpopup(false);};
+
   return (
     <>
       {/* Delete record  */}
@@ -116,6 +134,27 @@ const RacksListView = ({
         onHide={handleHistoryClose}
         onSwap={handleHistoryShow}
       />
+
+      {/* Recored Image View */}
+      <RecoredImageView
+        show={imgshowpopup}
+        onHide={handleImgPopupShowClose}
+        onSwap={handleImgPopupShow}
+      />
+
+      {/* Recored Document View */}
+      <RecoredDocumentView
+        show={docshowpopup}
+        onHide={handleDocPopupShowClose}
+        onSwap={handleDocPopupShow}
+      />
+
+      {/* Recored Map View */}
+      {/* <RecoredMapView
+        show={mapshowpopup}
+        onHide={handleMapPopupShowClose}
+        onSwap={handleMapPopupShow}
+      /> */}
 
       <div className="RacksListMains">
         <div className="RacksListView">
@@ -225,12 +264,30 @@ const RacksListView = ({
                     </div>
                   </td>
                   ))}
-                </tr>))
+                </tr>
+                
+                
+                ))
               ) : (
                 <tr>
                   <td style={{textAlign:"center"}} colSpan={fileRackRecordTheadListings.length}>Record Not found</td>
                 </tr>
               )}
+            </tbody>
+          </Table>
+          <Table>
+            <thead>
+              <tr>
+                <th>Screenshot</th>
+                <th>Document</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><h5 onClick={handleImgPopupShow}>View</h5></td>
+                <td><h5 onClick={handleDocPopupShow}>View</h5></td>
+                {/* <td><h5 onClick={handleMapPopupShow}>View</h5></td> */}
+              </tr>
             </tbody>
           </Table>
         </div>

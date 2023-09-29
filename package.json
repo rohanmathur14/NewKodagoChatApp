@@ -66,6 +66,7 @@
     "react-form-stepper": "^2.0.3",
     "react-google-autocomplete": "^2.7.0",
     "react-google-charts": "^4.0.0",
+    "react-google-maps": "^9.4.5",
     "react-google-recaptcha": "^2.1.0",
     "react-grid-dnd": "^2.1.2",
     "react-highlight-words": "^0.18.0",

@@ -84,10 +84,10 @@ h2 span {
 .btn-primary:hover{ background: #097dcf;border-color: #097dcf;box-shadow:none;}
 
 
-.StoriesListShape{height:44px;width:44px;border-radius:50%;overflow: hidden;margin:0 auto;border: solid 1px #cecece;}
+.StoriesListShape{height:40px;width:40px;border-radius:50%;overflow: hidden;margin:0 auto;border: solid 1px #cecece;}
 .StoriesListMore{background-color:#DFDCDC;height:44px;width:44px;border-radius:50%;color:#000000;
 font-size:14px;font-weight:600;cursor: pointer;}
-.topbar{background-color:#fff;padding:10px 0 0;position:fixed;width:100%;z-index:1;}
+.topbar{background-color:#fff;padding:10px 0 10px;position:fixed;width:100%;z-index:11;}
 .topbar .StoriesList ul li{padding:0 0px;}
 .Notification .dropdown-toggle::after{display:none;}
 .Notification .dropdown-toggle i{font-size:26px;color:#2F80ED;position: relative;}
@@ -151,7 +151,7 @@ display:flex;align-items:center;justify-content:center;background:#fff;}
 .SenderImg{border-radius:5px;overflow:hidden;background-color:#eee;margin:5px 0;text-align:center;}
 .ChatConversation ul li.RightChat .SenderMsg{text-align:left;}
 .SenderImg img{max-width: 114px !important;cursor: pointer;}
-.ChatConversation{background:url(../public/images/ChatBgImg.jpg)repeat;background-size:contain;}
+.ChatConversation{background:url(../public/images/ChatBgImg.jpg)repeat;background-size:contain;padding:2px 10px 0;}
 /* .ChatConversation{background:url(../public/images/ChatBgImg.jpg) no-repeat;background-size:cover;
   background: #efeae2;}
   .ChatConversation::before{position:absolute;left:0;top:0;background:url(https://web.whatsapp.com/img/bg-chat-tile-dark_a4be512e7195b6b733d9110b408f075d.png);content:'';background-size:contain;background-repeat:repeat;}   */
@@ -264,10 +264,10 @@ border-left: 2px solid #8e9091;content: '';position: absolute;right:6px;top:13px
   padding: 7px 10px;
   box-shadow: 0 5px 10px rgba(30,32,37,.12);
   transition: height 0.5s;
-  border: 1px solid #cbd6e2;min-width:100px;}
+  border: 1px solid #cbd6e2;min-width:110px;}
 
 .TopicSubList:hover .TopicSubListIn{display:block;animation: slide-up 0.5s ease-in-out;} 
-.TopicSubListInList{font-size:12px;padding: 7px 10px;cursor: pointer;transition-duration:.4s;color: #1A1D1E;}
+.TopicSubListInList{font-size:12px;padding: 7px 0px;cursor: pointer;transition-duration:.4s;color: #1A1D1E;}
 
 @keyframes slide-up {
     from {
@@ -707,7 +707,7 @@ background-color:#ebebeb;}
 
 .RacksListView{margin-top: 20px;background: #fff;}
 
-.RacksListView .table-responsive{height:calc(100vh - 290px);;overflow-y: auto;border-top:solid 1px #dfe3eb;}
+.RacksListView .table-responsive{height:calc(100vh - 260px);;overflow-y: auto;border-top:solid 1px #dfe3eb;}
 
 .RacksListView table{border-color: #dfe3eb;}
 .prof-pic{ height:30px; width:30px; border-radius:50% ; -webkit-border-radius:50% ; -moz-border-radius:50% ; -ms-border-radius:50% ; -o-border-radius:50% ;overflow: hidden;    border: solid 1px #a9b3bd; }
@@ -919,4 +919,17 @@ padding:7px 13px;cursor: pointer;}
 transition-duration:.4s;}
 .VideoPlayBtn i{color:#fff;font-size:40px;}
 .KodagoAdminBody{margin-top:80px;position: relative;}
+.ProfileName .dropdown button{    font-weight: 500;font-size: 14px;}
+
+.hideTopicArrow.TopicMain h5:after{display:none;}
+.TopicSubList.hideTopicArrow:after{display:none;}
+.TopicSubList.hideTopicArrow{white-space: nowrap;}
+.ShowRecordImg img{width:100%;max-height:500px;}
+
+.RackDocumantBox {box-shadow:rgba(87,97,145,.15) 0px 3px 18px 0px;border-radius:5px;margin:15px 0;}
+.RackDocumantBox h4{color:#44566c;font-size:13px;font-weight: 500;margin:15px 0 0;word-break: break-all;}
+.DocumantListBottom{margin:12px 10px 0;    border-top: dashed 1px #bfbdbd;padding: 10px 0px;}
+.DocumantListBottom a{color:#8697a8;font-size:12px;transition-duration:.5s;}
+.RackDocumantBoxTop{    padding: 25px 15px 0px;}
+.DocumantListBottom a:hover{color:#0060A4;}
 

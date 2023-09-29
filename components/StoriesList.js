@@ -230,7 +230,7 @@ const StoriesList = (props) => {
           </div>
         </div>
       </Modal> 
-      <div className="StoriesList position-relative">
+      <div className="StoriesList position-relative d-inline">
         {/* Swiper slider */}
         <Swiper
           direction="horizontal"

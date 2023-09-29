@@ -63,7 +63,7 @@ const TopBar = ({}) => {
         <div className="container-fluid">
           <Row className="align-items-center">
             <Col lg={"3"}>
-              <div className="kodagologo">
+              <div className="kodagologo d-flex">
                 <Link href="/destination-page">
                   <a className="d-inline-flex align-items-center">
                     <ImageLoader
