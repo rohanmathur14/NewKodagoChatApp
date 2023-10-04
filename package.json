@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Kodago - Directory & Feed",
   "engines": {
-    "node": "v18.16.1",
-    "npm": "9.5.1"
+    "node": "v16.17.0",
+    "npm": "8.15.0"
   },
   "private": true,
   "scripts": {
