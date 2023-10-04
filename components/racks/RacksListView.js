@@ -37,7 +37,7 @@ const RacksListView = ({
   const [isEditing, setIsEditing] = useState(false);
   const [username, setUsername] = useState("Jenny"); // Set the initial value of the username
 
-   // console.log('fileRackRecordDataListings---',fileRackRecordDataListings)
+  // console.log('fileRackRecordDataListings---',fileRackRecordDataListings)
 
   // Function to handle the click event on the h2 element
   const handleUsernameClick = () => {
@@ -75,7 +75,8 @@ const RacksListView = ({
   const handleDeleteRecordClose = () => {
     deleterecordsetShow(false);
   };
-
+  //files data variable
+  const[filesData,setFilesData] = useState();
   // Assignement Modal Code Here
   const [assignListshow, assignementsetShow] = useState(false);
   const handleAssignListsClose = () => assignementsetShow(false);
@@ -88,13 +89,22 @@ const RacksListView = ({
 
   // Images Modal Code Here
   const [imgshowpopup, setimgshowpopup] = useState(false);
-  const handleImgPopupShow = () => {setimgshowpopup(true);};
-  const handleImgPopupShowClose = () => {setimgshowpopup(false);};
+  const handleImgPopupShow = (files_data) => {    
+    setFilesData(files_data);
+    setimgshowpopup(true);
+  };
+  const handleImgPopupShowClose = () => {
+    setimgshowpopup(false);
+  };
 
   // Document Modal Code Here
   const [docshowpopup, setdocshowpopup] = useState(false);
-  const handleDocPopupShow = () => {setdocshowpopup(true);};
-  const handleDocPopupShowClose = () => {setdocshowpopup(false);};
+  const handleDocPopupShow = () => {
+    setdocshowpopup(true);
+  };
+  const handleDocPopupShowClose = () => {
+    setdocshowpopup(false);
+  };
 
   // Document Modal Code Here
   // const [mapshowpopup, setmapshowpopup] = useState(false);
@@ -136,11 +146,13 @@ const RacksListView = ({
       />
 
       {/* Recored Image View */}
-      <RecoredImageView
+      
+      {imgshowpopup &&<RecoredImageView
         show={imgshowpopup}
+        filesData={filesData}
         onHide={handleImgPopupShowClose}
         onSwap={handleImgPopupShow}
-      />
+      />}
 
       {/* Recored Document View */}
       <RecoredDocumentView
@@ -161,9 +173,10 @@ const RacksListView = ({
           <Table striped bordered hover responsive className="RacksListTable">
             <thead>
               <tr>
-                {fileRackRecordTheadListings.length>0 && <th key={'firstKey'}></th>}
+                {fileRackRecordTheadListings.length > 0 && (
+                  <th key={"firstKey"}></th>
+                )}
                 {fileRackRecordTheadListings.map((field, index) => (
-                 
                   <th key={index}>{field.name}</th>
                 ))}
 
@@ -185,92 +198,101 @@ const RacksListView = ({
             <tbody>
               {fileRackRecordDataListings.total > 0 ? (
                 fileRackRecordDataListings?.dbdata?.map((record, index) => (
-                <tr key={index}>
-                  <td>
-                    <div className="d-flex align-items-center px-2 TableDiv">
-                      <div className="prof-pic position-relative">
-                        <ImageLoader
-                          src={record.imageLink}
-                          quality={100}
-                          layout="fill"
-                          objectFit="contain"
-                          className="position-relative"
-                        />
-                      </div>
-                      <div className="username ms-2">
-                        <div className="Changetext position-relative">
-                          <div className="UsernameDetails ">
-                            <h2 className="mb-0">{record.username}</h2>
-                            <div className="UserAction">
-                              {/* Delete */}
-                              <Link href="#!">
-                                <a onClick={handleDeleteRecordShow}>
-                                  <OverlayTrigger
-                                    placement="top"
-                                    overlay={<Tooltip>Delete</Tooltip>}
-                                  >
-                                    <i className="fi-trash"></i>
-                                  </OverlayTrigger>
-                                </a>
-                              </Link>
+                  <tr key={index}>
+                    <td>
+                      <div className="d-flex align-items-center px-2 TableDiv">
+                        <div className="prof-pic position-relative">
+                          <ImageLoader
+                            src={record.imageLink}
+                            quality={100}
+                            layout="fill"
+                            objectFit="contain"
+                            className="position-relative"
+                          />
+                        </div>
+                        <div className="username ms-2">
+                          <div className="Changetext position-relative">
+                            <div className="UsernameDetails ">
+                              <h2 className="mb-0">{record.username}</h2>
+                              <div className="UserAction">
+                                {/* Delete */}
+                                <Link href="#!">
+                                  <a onClick={handleDeleteRecordShow}>
+                                    <OverlayTrigger
+                                      placement="top"
+                                      overlay={<Tooltip>Delete</Tooltip>}
+                                    >
+                                      <i className="fi-trash"></i>
+                                    </OverlayTrigger>
+                                  </a>
+                                </Link>
 
-                              {/* Comments */}
-                              <Link href="#!">
-                                <a onClick={handleCommentsListShow}>
-                                  <OverlayTrigger
-                                    placement="top"
-                                    overlay={<Tooltip>Comments</Tooltip>}
-                                  >
-                                    <i className="fi-messenger"></i>
-                                  </OverlayTrigger>
-                                </a>
-                              </Link>
+                                {/* Comments */}
+                                <Link href="#!">
+                                  <a onClick={handleCommentsListShow}>
+                                    <OverlayTrigger
+                                      placement="top"
+                                      overlay={<Tooltip>Comments</Tooltip>}
+                                    >
+                                      <i className="fi-messenger"></i>
+                                    </OverlayTrigger>
+                                  </a>
+                                </Link>
 
-                              {/* Group member */}
-                              <Link href="#!">
-                                <a onClick={handleAssignListsShow}>
-                                  <OverlayTrigger
-                                    placement="top"
-                                    overlay={<Tooltip>Assign member</Tooltip>}
-                                  >
-                                    <i className="fi-groupteam"></i>
-                                  </OverlayTrigger>
-                                </a>
-                              </Link>
+                                {/* Group member */}
+                                <Link href="#!">
+                                  <a onClick={handleAssignListsShow}>
+                                    <OverlayTrigger
+                                      placement="top"
+                                      overlay={<Tooltip>Assign member</Tooltip>}
+                                    >
+                                      <i className="fi-groupteam"></i>
+                                    </OverlayTrigger>
+                                  </a>
+                                </Link>
 
-                              {/* History */}
-                              <Link href="#!">
-                                <a onClick={handleHistoryShow}>
-                                  <OverlayTrigger
-                                    placement="top"
-                                    overlay={<Tooltip>History</Tooltip>}
-                                  >
-                                    <i className="fi-history"></i>
-                                  </OverlayTrigger>
-                                </a>
-                              </Link>
+                                {/* History */}
+                                <Link href="#!">
+                                  <a onClick={handleHistoryShow}>
+                                    <OverlayTrigger
+                                      placement="top"
+                                      overlay={<Tooltip>History</Tooltip>}
+                                    >
+                                      <i className="fi-history"></i>
+                                    </OverlayTrigger>
+                                  </a>
+                                </Link>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </td>
-                  { record?.data.map((childRecord, childIndex) => (
-                  <td key={childIndex}>
-                    <div className="d-flex align-items-center px-2 TableDiv">
-                      <div className="Changetext">
-                        <span>{childRecord.d_value}</span>
-                      </div>
-                    </div>
-                  </td>
-                  ))}
-                </tr>
-                
-                
+                    </td>
+                    {record?.data.map((childRecord, childIndex) => (
+                      <td key={childIndex}>
+                        <div className="d-flex align-items-center px-2 TableDiv">
+                          {childRecord.field_type == "image" ? (
+                            <div className="Changetext">
+                              <span><a href="#!" onClick={()=>handleImgPopupShow(childRecord.files_data)}>View</a></span>
+                            </div>
+                          ) : (
+                            <div className="Changetext">
+                              <span>{childRecord.d_value}</span>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    ))}
+                  </tr>
                 ))
               ) : (
                 <tr>
-                  <td style={{textAlign:"center"}} colSpan={fileRackRecordTheadListings.length}>Record Not found</td>
+                  <td
+                    style={{ textAlign: "center" }}
+                    colSpan={fileRackRecordTheadListings.length}
+                  >
+                    Record Not found
+                  </td>
                 </tr>
               )}
             </tbody>
@@ -284,8 +306,12 @@ const RacksListView = ({
             </thead>
             <tbody>
               <tr>
-                <td><h5 onClick={handleImgPopupShow}>View</h5></td>
-                <td><h5 onClick={handleDocPopupShow}>View</h5></td>
+                <td>
+                  <h5 onClick={handleImgPopupShow}>View</h5>
+                </td>
+                <td>
+                  <h5 onClick={handleDocPopupShow}>View</h5>
+                </td>
                 {/* <td><h5 onClick={handleMapPopupShow}>View</h5></td> */}
               </tr>
             </tbody>
