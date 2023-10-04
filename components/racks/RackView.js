@@ -104,7 +104,7 @@ const addNewRecordShow = () => addNewRecordsetShow(true)
   return (
     <>
 
-    <div className="RackView pb-3 pt-3 mt-5">
+    <div className="RackView pb-3 pt-4 mt-5">
         <div className="Breadcrumb">
             <div className="container-fluid">
                 {/* <Breadcrumb className="mx-3">
