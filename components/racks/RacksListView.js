@@ -271,10 +271,14 @@ const RacksListView = ({
                     {record?.data.map((childRecord, childIndex) => (
                       <td key={childIndex}>
                         <div className="d-flex align-items-center px-2 TableDiv">
-                          {childRecord.field_type == "image" ? (
+                          {childRecord?.files_data?.length>0 && (childRecord.field_type == "image" || childRecord.field_type == "video") ? (
                             <div className="Changetext">
                               <span><a href="#!" onClick={()=>handleImgPopupShow(childRecord.files_data)}>View</a></span>
                             </div>
+                          ) : childRecord.full_URL && childRecord.field_type === "signature" ? (<>
+                            { <div className="Changetext">
+                              <span><a href="#!" onClick={()=>handleImgPopupShow([{file_type:"signature",mainUrl:childRecord.full_URL}])}>View</a></span>
+                            </div>}</>
                           ) : (
                             <div className="Changetext">
                               <span>{childRecord.d_value}</span>
