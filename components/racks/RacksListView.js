@@ -76,7 +76,7 @@ const RacksListView = ({
     deleterecordsetShow(false);
   };
   //files data variable
-  const[filesData,setFilesData] = useState();
+  const [filesData, setFilesData] = useState();
   // Assignement Modal Code Here
   const [assignListshow, assignementsetShow] = useState(false);
   const handleAssignListsClose = () => assignementsetShow(false);
@@ -89,7 +89,7 @@ const RacksListView = ({
 
   // Images Modal Code Here
   const [imgshowpopup, setimgshowpopup] = useState(false);
-  const handleImgPopupShow = (files_data) => {    
+  const handleImgPopupShow = (files_data) => {
     setFilesData(files_data);
     setimgshowpopup(true);
   };
@@ -99,7 +99,8 @@ const RacksListView = ({
 
   // Document Modal Code Here
   const [docshowpopup, setdocshowpopup] = useState(false);
-  const handleDocPopupShow = () => {
+  const handleDocPopupShow = (files_data) => {
+    setFilesData(files_data);
     setdocshowpopup(true);
   };
   const handleDocPopupShowClose = () => {
@@ -146,20 +147,26 @@ const RacksListView = ({
       />
 
       {/* Recored Image View */}
-      
-      {imgshowpopup &&<RecoredImageView
-        show={imgshowpopup}
-        filesData={filesData}
-        onHide={handleImgPopupShowClose}
-        onSwap={handleImgPopupShow}
-      />}
+
+      {imgshowpopup && (
+        <RecoredImageView
+          show={imgshowpopup}
+          filesData={filesData}
+          onHide={handleImgPopupShowClose}
+          onSwap={handleImgPopupShow}
+        />
+      )}
 
       {/* Recored Document View */}
-      <RecoredDocumentView
-        show={docshowpopup}
-        onHide={handleDocPopupShowClose}
-        onSwap={handleDocPopupShow}
-      />
+
+      {docshowpopup && (
+        <RecoredDocumentView
+          show={docshowpopup}
+          filesData={filesData}
+          onHide={handleDocPopupShowClose}
+          onSwap={handleDocPopupShow}
+        />
+      )}
 
       {/* Recored Map View */}
       {/* <RecoredMapView
@@ -271,14 +278,55 @@ const RacksListView = ({
                     {record?.data.map((childRecord, childIndex) => (
                       <td key={childIndex}>
                         <div className="d-flex align-items-center px-2 TableDiv">
-                          {childRecord?.files_data?.length>0 && (childRecord.field_type == "image" || childRecord.field_type == "video") ? (
+                          {childRecord?.files_data?.length > 0 && (childRecord.field_type == "image" ||
+                            childRecord.field_type == "video") ? (
                             <div className="Changetext">
-                              <span><a href="#!" onClick={()=>handleImgPopupShow(childRecord.files_data)}>View</a></span>
+                              <span>
+                                <a
+                                  href="#!"
+                                  onClick={() =>
+                                    handleImgPopupShow(childRecord.files_data)
+                                  }
+                                >
+                                  View
+                                </a>
+                              </span>
                             </div>
-                          ) : childRecord.full_URL && childRecord.field_type === "signature" ? (<>
-                            { <div className="Changetext">
-                              <span><a href="#!" onClick={()=>handleImgPopupShow([{file_type:"signature",mainUrl:childRecord.full_URL}])}>View</a></span>
-                            </div>}</>
+                          ) : childRecord.full_URL && childRecord.field_type === "signature" ? (
+                            <>
+                              {
+                                <div className="Changetext">
+                                  <span>
+                                    <a
+                                      href="#!"
+                                      onClick={() =>
+                                        handleImgPopupShow([
+                                          {
+                                            file_type: "signature",
+                                            mainUrl: childRecord.full_URL,
+                                          },
+                                        ])
+                                      }
+                                    >
+                                      View
+                                    </a>
+                                  </span>
+                                </div>
+                              }
+                            </>
+                          ) : childRecord?.files_data?.length > 0 && childRecord.field_type === "document" ? (
+                            <div className="Changetext">
+                              <span>
+                                <a
+                                  href="#!"
+                                  onClick={() =>
+                                    handleDocPopupShow(childRecord.files_data)
+                                  }
+                                >
+                                  View
+                                </a>
+                              </span>
+                            </div>
                           ) : (
                             <div className="Changetext">
                               <span>{childRecord.d_value}</span>
@@ -301,25 +349,7 @@ const RacksListView = ({
               )}
             </tbody>
           </Table>
-          <Table>
-            <thead>
-              <tr>
-                <th>Screenshot</th>
-                <th>Document</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <h5 onClick={handleImgPopupShow}>View</h5>
-                </td>
-                <td>
-                  <h5 onClick={handleDocPopupShow}>View</h5>
-                </td>
-                {/* <td><h5 onClick={handleMapPopupShow}>View</h5></td> */}
-              </tr>
-            </tbody>
-          </Table>
+          
         </div>
 
         {/* Pagination */}
