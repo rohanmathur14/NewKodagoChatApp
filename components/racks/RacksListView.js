@@ -27,7 +27,8 @@ import RacksAssignment from "../racks/RacksAssignment";
 import RacksHistory from "../racks/RacksHistory";
 import RecoredImageView from "../racks/RecoredImageView";
 import RecoredDocumentView from "../racks/RecoredDocumentView";
-import RecoredMapView from "../racks/RecoredMapView";
+//import RecoredMapView from "../racks/RecoredMapView";
+import RecoredMapViewModal from "../racks/RecoredMapViewModal";
 import Form from "react-bootstrap/Form";
 
 const RacksListView = ({
@@ -39,6 +40,9 @@ const RacksListView = ({
 
   // console.log('fileRackRecordDataListings---',fileRackRecordDataListings)
 
+  //define the pagination variable
+  const [startRecord, setStartRecord] = useState(0);
+  const [perPage, setPerPage] = useState(20);
   // Function to handle the click event on the h2 element
   const handleUsernameClick = () => {
     setIsEditing(true);
@@ -108,9 +112,16 @@ const RacksListView = ({
   };
 
   // Document Modal Code Here
-  // const [mapshowpopup, setmapshowpopup] = useState(false);
-  // const handleMapPopupShow = () => {setmapshowpopup(true);};
-  // const handleMapPopupShowClose = () => {setmapshowpopup(false);};
+  const [mapshowpopup, setmapshowpopup] = useState(false);
+  const handleMapPopupShow = (fileRackLatLongs) => {
+    setmapshowpopup(true);
+    setFileRackLatLongs(fileRackLatLongs);
+  };
+  const handleMapPopupShowClose = () => {
+    setmapshowpopup(false);
+  };
+
+  const [fileRackLatLongs, setFileRackLatLongs] = useState([]);
 
   return (
     <>
@@ -169,11 +180,28 @@ const RacksListView = ({
       )}
 
       {/* Recored Map View */}
-      {/* <RecoredMapView
-        show={mapshowpopup}
-        onHide={handleMapPopupShowClose}
-        onSwap={handleMapPopupShow}
-      /> */}
+
+      {/* {mapshowpopup && (
+        <RecoredMapView
+          show={mapshowpopup}
+          onHide={handleMapPopupShowClose}
+          onSwap={handleMapPopupShow}
+          googleMapURL={`https://maps.googleapis.com/maps/api/js?key=AIzaSyAopcumfPIKkHn4Ym1z2AeU0RDEAAY0ZXo&v=3.exp&libraries=geometry,drawing,places`} // Replace YOUR_API_KEY with your actual Google Maps API key
+          loadingElement={<div style={{ height: "100%" }} />}
+          containerElement={<div style={{ height: "400px" }} />}
+          mapElement={<div style={{ height: "100%" }} />}
+          latLongs={fileRackLatLongs}
+        />
+      )} */}
+
+      {mapshowpopup && (
+        <RecoredMapViewModal
+          show={mapshowpopup}
+          onHide={handleMapPopupShowClose}
+          onSwap={handleMapPopupShow} 
+          latLongs={fileRackLatLongs}
+        />
+      )}
 
       <div className="RacksListMains">
         <div className="RacksListView">
@@ -278,7 +306,8 @@ const RacksListView = ({
                     {record?.data.map((childRecord, childIndex) => (
                       <td key={childIndex}>
                         <div className="d-flex align-items-center px-2 TableDiv">
-                          {childRecord?.files_data?.length > 0 && (childRecord.field_type == "image" ||
+                          {childRecord?.files_data?.length > 0 &&
+                          (childRecord.field_type == "image" ||
                             childRecord.field_type == "video") ? (
                             <div className="Changetext">
                               <span>
@@ -292,7 +321,8 @@ const RacksListView = ({
                                 </a>
                               </span>
                             </div>
-                          ) : childRecord.full_URL && childRecord.field_type === "signature" ? (
+                          ) : childRecord.full_URL &&
+                            childRecord.field_type === "signature" ? (
                             <>
                               {
                                 <div className="Changetext">
@@ -314,13 +344,31 @@ const RacksListView = ({
                                 </div>
                               }
                             </>
-                          ) : childRecord?.files_data?.length > 0 && childRecord.field_type === "document" ? (
+                          ) : childRecord?.files_data?.length > 0 &&
+                            childRecord.field_type === "document" ? (
                             <div className="Changetext">
                               <span>
                                 <a
                                   href="#!"
                                   onClick={() =>
                                     handleDocPopupShow(childRecord.files_data)
+                                  }
+                                >
+                                  View
+                                </a>
+                              </span>
+                            </div>
+                          ) : childRecord.field_type === "location" &&
+                            childRecord?.unserialize_data?.latlng?.length >
+                              0 ? (
+                            <div className="Changetext">
+                              <span>
+                                <a
+                                  href="#!"
+                                  onClick={() =>
+                                    handleMapPopupShow(
+                                      childRecord.unserialize_data.latlng
+                                    )
                                   }
                                 >
                                   View
@@ -349,7 +397,6 @@ const RacksListView = ({
               )}
             </tbody>
           </Table>
-          
         </div>
 
         {/* Pagination */}
