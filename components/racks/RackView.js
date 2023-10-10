@@ -211,7 +211,7 @@ const addNewRecordShow = () => addNewRecordsetShow(true)
                                     <div className="d-inline-block" onClick={filerackShow}>
                                         <Link href='#!' >
                                             <a>
-                                                <button type="button" class="btn btn-outline-primary">
+                                                <button type="button" className="btn btn-outline-primary">
                                                     <i className="fi-file"></i>
                                                     File Racks
                                                 </button>
