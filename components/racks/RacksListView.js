@@ -30,19 +30,28 @@ import RecoredDocumentView from "../racks/RecoredDocumentView";
 //import RecoredMapView from "../racks/RecoredMapView";
 import RecoredMapViewModal from "../racks/RecoredMapViewModal";
 import Form from "react-bootstrap/Form";
+import { useFileRackContext } from "../../components/FileRackContext";
 
-const RacksListView = ({
-  fileRackRecordTheadListings,
-  fileRackRecordDataListings,
-}) => {
+const RacksListView = ({ fileRackAllData }) => {
+  const { sheetId, groupId, userId, userToken } = useFileRackContext();
+
   const [isEditing, setIsEditing] = useState(false);
   const [username, setUsername] = useState("Jenny"); // Set the initial value of the username
-
+  const [fileRackRecordTheadListings, setFileRackRecordTheadListings] =
+    useState(fileRackAllData?.data?.sheetFields || []);
+  const [fileRackRecordDataListings, setFileRackRecordDataListings] = useState(
+    fileRackAllData?.data?.sheetData || []
+  );
   // console.log('fileRackRecordDataListings---',fileRackRecordDataListings)
 
   //define the pagination variable
   const [startRecord, setStartRecord] = useState(0);
   const [perPage, setPerPage] = useState(20);
+  const [totalRecord, setTotalRecord] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
   // Function to handle the click event on the h2 element
   const handleUsernameClick = () => {
     setIsEditing(true);
@@ -123,8 +132,118 @@ const RacksListView = ({
 
   const [fileRackLatLongs, setFileRackLatLongs] = useState([]);
 
+  useEffect(async () => {
+    //Call the function
+    setFileRackRecordTheadListings(fileRackAllData?.data?.sheetFields || []);
+    setFileRackRecordDataListings(fileRackAllData?.data?.sheetData || []);
+    setTotalRecord(fileRackAllData?.data?.sheetData?.total);
+    const totalPages = Math.ceil(
+      fileRackAllData?.data?.sheetData?.total / perPage
+    );
+    setTotalPages(totalPages);
+  }, [fileRackAllData]);
+
+  useEffect(() => {
+    // Make an API request to fetch data based on the current perPage and currentPage values
+    // Replace this with your actual API endpoint
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        let newStart = 0;
+        if (currentPage > 1) {
+          newStart = (currentPage - 1) * perPage;
+        }
+        // Make an API request here and set the response data in the 'data' state
+        var formdata = new FormData();
+        formdata.append("sheet_id", sheetId);
+        formdata.append("group_id", groupId);
+
+        formdata.append("Authkey", process.env.NEXT_PUBLIC_AUTH_KEY);
+        formdata.append("Userid", userId);
+        formdata.append("Token", userToken);
+        formdata.append("start", newStart);
+        formdata.append("perpage", perPage);
+        const getFileRacksRecords = await fetch(
+          process.env.NEXT_PUBLIC_API_URL + "sheets/viewData_v1",
+          {
+            method: "POST",
+            body: formdata,
+            //mode: 'no-cors'
+          }
+        );
+        const fileRackRecordRes = await getFileRacksRecords.json();
+        setFileRackRecordTheadListings(
+          fileRackRecordRes?.data?.sheetFields || []
+        );
+        setFileRackRecordDataListings(fileRackRecordRes?.data?.sheetData || []);
+        setTotalRecord(fileRackRecordRes?.data?.sheetData?.total);
+        const totalPages = Math.ceil(
+          fileRackRecordRes?.data?.sheetData?.total / perPage
+        );
+        setTotalPages(totalPages);
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+        console.error("Error fetching data: ", error);
+      }
+    };
+
+    fetchData();
+  }, [perPage, currentPage]);
+
+  {
+    //console.log("perPage-------", perPage);
+  }
+
+  const generatePaginationItems = () => {
+    const items = [];
+
+    if (totalPages > 1) {
+      // Add the "Prev" button
+      items.push(
+        <Pagination.Prev
+          key="prev"
+          onClick={() =>
+            setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))
+          }
+        >
+          <i className="fi-chevron-left"></i> Prev
+        </Pagination.Prev>
+      );
+
+      // Add the page numbers
+      for (let page = 1; page <= totalPages; page++) {
+        items.push(
+          <Pagination.Item
+            key={page}
+            active={page === currentPage}
+            onClick={() => setCurrentPage(page)}
+          >
+            {page}
+          </Pagination.Item>
+        );
+      }
+
+      // Add the "Next" button
+      items.push(
+        <Pagination.Next
+          key="next"
+          onClick={() =>
+            setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages))
+          }
+        >
+          Next <i className="fi-chevron-right"></i>
+        </Pagination.Next>
+      );
+    }
+
+    return items;
+  };
+
   return (
     <>
+     
+
       {/* Delete record  */}
 
       <DeleteRecord
@@ -198,13 +317,14 @@ const RacksListView = ({
         <RecoredMapViewModal
           show={mapshowpopup}
           onHide={handleMapPopupShowClose}
-          onSwap={handleMapPopupShow} 
+          onSwap={handleMapPopupShow}
           latLongs={fileRackLatLongs}
         />
       )}
 
       <div className="RacksListMains">
         <div className="RacksListView">
+        {!isLoading ? 
           <Table striped bordered hover responsive className="RacksListTable">
             <thead>
               <tr>
@@ -395,37 +515,37 @@ const RacksListView = ({
                   </td>
                 </tr>
               )}
+               
             </tbody>
           </Table>
+          :<p style={{padding:'20px',textAlign:'center'}}>Loading...</p>}
         </div>
 
-        {/* Pagination */}
+        
         <div className="RacksListPagination d-flex justify-content-center align-items-center mt-3">
-          <Pagination className="">
-            <Pagination.Item>
-              <i className="fi-chevron-left"></i> Prev{" "}
-            </Pagination.Item>
-            <Pagination.Item>{1}</Pagination.Item>
-            <Pagination.Item active>{2}</Pagination.Item>
-            <Pagination.Item>{3}</Pagination.Item>
-            <Pagination.Item>
-              Next <i className="fi-chevron-right"></i>{" "}
-            </Pagination.Item>
+          <Pagination>            
+            <Pagination>{generatePaginationItems()}</Pagination>
           </Pagination>
-
-          {/* Page Data Count */}
 
           <Dropdown drop="up" className="ms-2">
             <Dropdown.Toggle variant="outline-secondary bg-transparent py-2 px-0 border-0">
-              25 per page
+              {perPage} per page
             </Dropdown.Toggle>
             <Dropdown.Menu className="mx-1">
-              <Dropdown.Item eventKey="1">25 per page</Dropdown.Item>
-              <Dropdown.Item eventKey="2">50 per page</Dropdown.Item>
-              <Dropdown.Item eventKey="3">100 per page</Dropdown.Item>
+              <Dropdown.Item eventKey="1" onClick={() => setPerPage(20)}>
+                20 per page
+              </Dropdown.Item>
+              <Dropdown.Item eventKey="2" onClick={() => setPerPage(50)}>
+                50 per page
+              </Dropdown.Item>
+              <Dropdown.Item eventKey="3" onClick={() => setPerPage(100)}>
+                100 per page
+              </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </div>
+
+        
 
         {/* Data Save Change  */}
 
