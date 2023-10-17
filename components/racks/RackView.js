@@ -25,9 +25,12 @@ const RackView = ({}) => {
   const [fileRackRecordDataListings, setFileRackRecordDataListings] = useState(
     []
   );
-  const [fileRackAllData, seFileRackAllData] = useState();
+  const [fileRackAllData, setFileRackAllData] = useState();
+
+  const [fileRackSorting, setFileRackSortingList] = useState([]);
+
   //list and grid view variable
-  const [isListView, setIsListView] = useState(true); 
+  const [isListView, setIsListView] = useState(true);
 
   const getFileRackRecordListings = async () => {
     //console.log('chatListingsByGroupId--->>>>')
@@ -49,9 +52,18 @@ const RackView = ({}) => {
       }
     );
     const fileRackRecordRes = await getFileRacksRecords.json();
-    seFileRackAllData(fileRackRecordRes); //All data
+    setFileRackAllData(fileRackRecordRes); //All data
     setFileRackRecordTheadListings(fileRackRecordRes?.data?.sheetFields || []);
     setFileRackRecordDataListings(fileRackRecordRes?.data?.sheetData || []);
+    //set the sorting listing data
+    if (fileRackRecordRes?.data?.sheet_sorting?.length > 0) {
+      let sortingListings = fileRackRecordRes?.data?.sheet_sorting;
+      let newSortingListings = sortingListings.map((record) => ({
+        id: record.id,
+        text: record.name,
+      }));
+      setFileRackSortingList(newSortingListings || []);
+    }
   };
   useEffect(async () => {
     //Call the function
@@ -60,6 +72,7 @@ const RackView = ({}) => {
 
   // console.log('fileRackRecordTheadListings------',fileRackRecordTheadListings)
   // console.log('fileRackRecordDataListings------',fileRackRecordDataListings)
+  //console.log("fileRackSorting------", fileRackSorting);
 
   const handleViewIconClick = () => {
     // Your logic for the onClick action
@@ -212,8 +225,8 @@ const RackView = ({}) => {
                         <div className="d-flex align-items-center FilterThirdSearch">
                           <div className="me-3">
                             <Select2Wrapper
-                              options={options1}
-                              defaultValue="1"
+                              options={fileRackSorting}
+                              defaultValue={fileRackSorting[0]?.id || ''}
                               onChange={handleSelectChange}
                             />
                           </div>
