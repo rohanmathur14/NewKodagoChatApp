@@ -81,9 +81,9 @@ const RackView = ({}) => {
 
   // Advance Filter
 
-  const [show, setShow] = useState(false);
-  const filterClose = () => setShow(false);
-  const filterShow = () => setShow(true);
+  const [showAdvanceFilter, setShowAdvanceFilter] = useState(false);
+  const filterClose = () => setShowAdvanceFilter(false);
+  const filterShow = () => setShowAdvanceFilter(true);
 
   // Other File racks Show
 
@@ -226,7 +226,7 @@ const RackView = ({}) => {
                           <div className="me-3">
                             <Select2Wrapper
                               options={fileRackSorting}
-                              defaultValue={fileRackSorting[0]?.id || ''}
+                              defaultValue={fileRackSorting[0]?.id || ""}
                               onChange={handleSelectChange}
                             />
                           </div>
@@ -311,20 +311,22 @@ const RackView = ({}) => {
 
       {/* Advance Filter Code here */}
 
-      <Offcanvas
-        show={show}
-        onHide={filterClose}
-        placement="end"
-        className="FilterOffcanvas"
-      >
-        <Offcanvas.Header closeButton className="border-bottom">
-          <Offcanvas.Title>Advance Filter</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body className="pb-0">
-          {/* Advance Filter */}
-          <AdvanceFilter />
-        </Offcanvas.Body>
-      </Offcanvas>
+      {showAdvanceFilter && (
+        <Offcanvas
+          show={showAdvanceFilter}
+          onHide={filterClose}
+          placement="end"
+          className="FilterOffcanvas"
+        >
+          <Offcanvas.Header closeButton className="border-bottom">
+            <Offcanvas.Title>Advance Filter</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body className="pb-0">
+            {/* Advance Filter */}
+            <AdvanceFilter fileRackAllData={fileRackAllData} />
+          </Offcanvas.Body>
+        </Offcanvas>
+      )}
 
       {/* Other File Racks Code here */}
 

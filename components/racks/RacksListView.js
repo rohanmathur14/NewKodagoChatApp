@@ -22,7 +22,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 
 import Offcanvas from "react-bootstrap/Offcanvas";
 import DeleteRecord from "../racks/DeleteRecord";
-import RacksCommentsList from "../racks//RacksCommentsList";
+import RacksCommentsList from "../racks/RacksCommentsList";
 import RacksAssignment from "../racks/RacksAssignment";
 import RacksHistory from "../racks/RacksHistory";
 import RecoredImageView from "../racks/RecoredImageView";
