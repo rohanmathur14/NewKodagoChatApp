@@ -4,15 +4,7 @@ import Link from "next/link";
 import { Col, Row } from "react-bootstrap";
 import { Table } from "react-bootstrap";
 import ImageLoader from "../ImageLoader";
-
-// import Card from 'react-bootstrap/Card'
-// import GalleryItem from '../GalleryItem'
-// import LightGallery from 'lightgallery/react'
-// import lgZoom from 'lightgallery/plugins/zoom'
-// import lgFullScreen from 'lightgallery/plugins/fullscreen'
-// import 'lightgallery/css/lightgallery.css'
-// import 'lightgallery/css/lg-zoom.css'
-// import 'lightgallery/css/lg-fullscreen.css'
+ 
 
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
