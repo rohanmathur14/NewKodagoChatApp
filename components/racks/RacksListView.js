@@ -363,7 +363,7 @@ const RacksListView = ({ fileRackAllData }) => {
                               <h2 className="mb-0">{record.username}</h2>
                               <div className="UserAction">
                                 {/* Delete */}
-                                <Link href="#!">
+                                {/* <Link href="#!"> */}
                                   <a onClick={handleDeleteRecordShow}>
                                     <OverlayTrigger
                                       placement="top"
@@ -372,10 +372,10 @@ const RacksListView = ({ fileRackAllData }) => {
                                       <i className="fi-trash"></i>
                                     </OverlayTrigger>
                                   </a>
-                                </Link>
+                                {/* </Link> */}
 
                                 {/* Comments */}
-                                <Link href="#!">
+                                {/* <Link href="#!"> */}
                                   <a onClick={handleCommentsListShow}>
                                     <OverlayTrigger
                                       placement="top"
@@ -384,10 +384,10 @@ const RacksListView = ({ fileRackAllData }) => {
                                       <i className="fi-messenger"></i>
                                     </OverlayTrigger>
                                   </a>
-                                </Link>
+                                {/* </Link> */}
 
                                 {/* Group member */}
-                                <Link href="#!">
+                                {/* <Link href="#!"> */}
                                   <a onClick={handleAssignListsShow}>
                                     <OverlayTrigger
                                       placement="top"
@@ -396,10 +396,10 @@ const RacksListView = ({ fileRackAllData }) => {
                                       <i className="fi-groupteam"></i>
                                     </OverlayTrigger>
                                   </a>
-                                </Link>
+                                {/* </Link> */}
 
                                 {/* History */}
-                                <Link href="#!">
+                                {/* <Link href="#!"> */}
                                   <a onClick={handleHistoryShow}>
                                     <OverlayTrigger
                                       placement="top"
@@ -408,7 +408,7 @@ const RacksListView = ({ fileRackAllData }) => {
                                       <i className="fi-history"></i>
                                     </OverlayTrigger>
                                   </a>
-                                </Link>
+                                {/* </Link> */}
                               </div>
                             </div>
                           </div>

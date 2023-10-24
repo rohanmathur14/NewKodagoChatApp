@@ -13,7 +13,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Select2Wrapper } from "./Select2Wrapper";
 import { getDateTime } from "../../helper/helper";
 
-const AdvanceFilter = ({ fileRackAllData }) => {
+const AdvanceFilter = ({
+  fileRackAllData,
+  setShowAdvanceFilter,
+  handleSubmitAdvancedFilterFrm,
+}) => {
   const [createdFrom, setCreatedFrom] = useState(new Date());
   const [createdTo, setCreatedTo] = useState(new Date());
   const [filterDate, setCreatedfilterDate] = useState(new Date());
@@ -49,11 +53,17 @@ const AdvanceFilter = ({ fileRackAllData }) => {
     setFilters(newFilters);
   };
 
-  const submitAdvancedFilterFrm = () => {
-
+  const submitAdvancedFilterFrm = async (event) => {
+    await handleSubmitAdvancedFilterFrm(filters);
+    setShowAdvanceFilter(false);
   };
 
-  console.log("filters====", filters);
+  const resetAdvancedFilterFrm = async (event) => {
+    await setFilters([]);
+    await handleSubmitAdvancedFilterFrm();
+    setShowAdvanceFilter(false);
+  };
+  //console.log("filters====", filters);
   return (
     <>
       <div className="AdvanceFilter">
@@ -143,14 +153,19 @@ const AdvanceFilter = ({ fileRackAllData }) => {
             ))}
           </Row>
           <div className="d-flex justify-content-end Filterbtn align-items-center AdvanceFilterbtns pt-3">
-            <Button type="submit" variant="primary" className="me-3">
+            <Button
+              type="submit"
+              variant="primary"
+              className="me-3"
+              onClick={submitAdvancedFilterFrm}
+            >
               {" "}
               Search
             </Button>
             <Button
               type="button"
               variant="secondary"
-              onClick={submitAdvancedFilterFrm}
+              onClick={resetAdvancedFilterFrm}
             >
               Reset
             </Button>

@@ -32,7 +32,13 @@ const RackView = ({}) => {
   //list and grid view variable
   const [isListView, setIsListView] = useState(true);
 
-  const getFileRackRecordListings = async () => {
+  const [isLoading, setIsLoading] = useState(false);
+  //sorting
+  const [sortBy, setSortBy] = useState("");
+  const [sort, setSort] = useState("");
+
+  const getFileRackRecordListings = async (filtersArrayObj = []) => {
+    setIsLoading(true);
     //console.log('chatListingsByGroupId--->>>>')
     var formdata = new FormData();
     formdata.append("sheet_id", sheetId);
@@ -43,6 +49,11 @@ const RackView = ({}) => {
     formdata.append("Token", userToken);
     formdata.append("start", 0);
     formdata.append("perpage", 20);
+    formdata.append("sort_by", sortBy);
+    formdata.append("sort", sort);
+    if (filtersArrayObj?.length > 0) {
+      formdata.append("filters", JSON.stringify(filtersArrayObj));
+    }
     const getFileRacksRecords = await fetch(
       process.env.NEXT_PUBLIC_API_URL + "sheets/viewData_v1",
       {
@@ -63,7 +74,10 @@ const RackView = ({}) => {
         text: record.name,
       }));
       setFileRackSortingList(newSortingListings || []);
+      // setSortBy(newSortingListings[0].id);
+      // setSort("asc");
     }
+    setIsLoading(false);
   };
   useEffect(async () => {
     //Call the function
@@ -103,9 +117,26 @@ const RackView = ({}) => {
   ];
 
   const handleSelectChange = (selectedValue) => {
-    console.log("Selected Value:", selectedValue);
+    //console.log("Selected Value:", selectedValue);
+    setSortBy(selectedValue);
+  };
+  const handleSelectSortByChange = (selectedValue) => {
+    //console.log("Selected Value:", selectedValue);
+    setSort(selectedValue);
   };
 
+  //submit advanced filter form
+  const handleSubmitAdvancedFilterFrm = async (filtersValue) => {
+    await getFileRackRecordListings(filtersValue);
+  };
+  //Add the sorting
+  const sortingFilter = async () => {
+    await getFileRackRecordListings();
+  };
+  //Reset the sorting
+  const resetTheSortingFilter = async () => {
+    await getFileRackRecordListings();
+  };
   // Add new record code here
 
   const [addNewRecordshow, addNewRecordsetShow] = useState(false);
@@ -139,40 +170,37 @@ const RackView = ({}) => {
                   </div>
                   {/* Grid and List button code here */}
                   <div className="GridListBtn">
-                    <Link href="#!">
-                      <OverlayTrigger
-                        placement="top"
-                        overlay={
-                          <Tooltip>View your Records as a list </Tooltip>
-                        }
+                    {/* <Link href="#!"> */}
+                    <OverlayTrigger
+                      placement="top"
+                      overlay={<Tooltip>View your Records as a list </Tooltip>}
+                    >
+                      <a
+                        onClick={handleViewIconClick}
+                        className={`align-items-center justify-content-center ${
+                          isListView ? "active" : ""
+                        }`}
                       >
-                        <a
-                          onClick={handleViewIconClick}
-                          className={`align-items-center justify-content-center ${
-                            isListView ? "active" : ""
-                          }`}
-                        >
-                          <i className="fi-list"></i>
-                        </a>
-                      </OverlayTrigger>
-                    </Link>
-                    <Link href="#!">
-                      <OverlayTrigger
-                        placement="top"
-                        overlay={
-                          <Tooltip>View your Records as a Grid </Tooltip>
-                        }
+                        <i className="fi-list"></i>
+                      </a>
+                    </OverlayTrigger>
+                    {/* </Link> */}
+
+                    {/* <Link href="#!"> */}
+                    <OverlayTrigger
+                      placement="top"
+                      overlay={<Tooltip>View your Records as a Grid </Tooltip>}
+                    >
+                      <a
+                        onClick={handleViewIconClick}
+                        className={`align-items-center justify-content-center ${
+                          !isListView ? "active" : ""
+                        }`}
                       >
-                        <a
-                          onClick={handleViewIconClick}
-                          className={`align-items-center justify-content-center ${
-                            !isListView ? "active" : ""
-                          }`}
-                        >
-                          <i className="fi-grid"></i>
-                        </a>
-                      </OverlayTrigger>
-                    </Link>
+                        <i className="fi-grid"></i>
+                      </a>
+                    </OverlayTrigger>
+                    {/* </Link> */}
                   </div>
 
                   {/* Data usage code here */}
@@ -232,9 +260,13 @@ const RackView = ({}) => {
                           </div>
                           {/* select Ascending and Desending */}
                           <Form.Group controlId="select-sm" className="me-3">
-                            <Form.Select size="sm" defaultValue="default">
-                              <option value="default">Ascending</option>
-                              <option value="1">Descending</option>
+                            <Form.Select
+                              size="sm"
+                              defaultValue="asc"
+                              onChange={handleSelectSortByChange}
+                            >
+                              <option value="asc">Ascending</option>
+                              <option value="desc">Descending</option>
                             </Form.Select>
                           </Form.Group>
                           {/* Filter button */}
@@ -243,11 +275,16 @@ const RackView = ({}) => {
                               type="submit"
                               variant="primary"
                               className="me-3"
+                              onClick={sortingFilter}
                             >
                               {" "}
                               Search
                             </Button>
-                            <Button type="submit" variant="secondary">
+                            <Button
+                              type="submit"
+                              variant="secondary"
+                              onClick={resetTheSortingFilter}
+                            >
                               Reset
                             </Button>
                           </div>
@@ -323,7 +360,11 @@ const RackView = ({}) => {
           </Offcanvas.Header>
           <Offcanvas.Body className="pb-0">
             {/* Advance Filter */}
-            <AdvanceFilter fileRackAllData={fileRackAllData} />
+            <AdvanceFilter
+              fileRackAllData={fileRackAllData}
+              setShowAdvanceFilter={setShowAdvanceFilter}
+              handleSubmitAdvancedFilterFrm={handleSubmitAdvancedFilterFrm}
+            />
           </Offcanvas.Body>
         </Offcanvas>
       )}
