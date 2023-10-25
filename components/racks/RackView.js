@@ -49,8 +49,12 @@ const RackView = ({}) => {
     formdata.append("Token", userToken);
     formdata.append("start", 0);
     formdata.append("perpage", 20);
-    formdata.append("sort_by", sortBy);
-    formdata.append("sort", sort);
+    //For sorting
+    if (sortBy != 0 && sort != 0) {
+      formdata.append("sort_by", sortBy);
+      formdata.append("sort", sort);
+    }
+    //For filter
     if (filtersArrayObj?.length > 0) {
       formdata.append("filters", JSON.stringify(filtersArrayObj));
     }
@@ -73,9 +77,9 @@ const RackView = ({}) => {
         id: record.id,
         text: record.name,
       }));
+
+      await newSortingListings.unshift({ id: 0, text: "Select" });
       setFileRackSortingList(newSortingListings || []);
-      // setSortBy(newSortingListings[0].id);
-      // setSort("asc");
     }
     setIsLoading(false);
   };
@@ -117,12 +121,10 @@ const RackView = ({}) => {
   ];
 
   const handleSelectChange = (selectedValue) => {
-    //console.log("Selected Value:", selectedValue);
-    setSortBy(selectedValue);
+    setSortBy(selectedValue.target.value);
   };
   const handleSelectSortByChange = (selectedValue) => {
-    //console.log("Selected Value:", selectedValue);
-    setSort(selectedValue);
+    setSort(selectedValue.target.value);
   };
 
   //submit advanced filter form
@@ -131,10 +133,14 @@ const RackView = ({}) => {
   };
   //Add the sorting
   const sortingFilter = async () => {
-    await getFileRackRecordListings();
+    if (sort != 0 && sortBy != 0) {
+      await getFileRackRecordListings();
+    }
   };
   //Reset the sorting
   const resetTheSortingFilter = async () => {
+    setSortBy(0);
+    setSort(0);
     await getFileRackRecordListings();
   };
   // Add new record code here
@@ -252,19 +258,31 @@ const RackView = ({}) => {
                       <Form>
                         <div className="d-flex align-items-center FilterThirdSearch">
                           <div className="me-3">
-                            <Select2Wrapper
+                            {/* <Select2Wrapper
                               options={fileRackSorting}
-                              defaultValue={fileRackSorting[0]?.id || ""}
+                              defaultValue={fileRackSorting[0]?.id}
                               onChange={handleSelectChange}
-                            />
+                            /> */}
+                            <Form.Select
+                              size="sm"
+                              onChange={handleSelectChange}
+                              value={sort}
+                            >
+                              {fileRackSorting.map((record) => (
+                                <option key={record.id} value={record.id}>
+                                  {record.text}
+                                </option>
+                              ))}
+                            </Form.Select>
                           </div>
                           {/* select Ascending and Desending */}
                           <Form.Group controlId="select-sm" className="me-3">
                             <Form.Select
                               size="sm"
-                              defaultValue="asc"
                               onChange={handleSelectSortByChange}
+                              value={sortBy}
                             >
+                              <option value="0">Select</option>
                               <option value="asc">Ascending</option>
                               <option value="desc">Descending</option>
                             </Form.Select>
