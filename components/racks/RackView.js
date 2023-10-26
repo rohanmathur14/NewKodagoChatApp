@@ -37,7 +37,10 @@ const RackView = ({}) => {
   const [sortBy, setSortBy] = useState("");
   const [sort, setSort] = useState("");
 
-  const getFileRackRecordListings = async (filtersArrayObj = []) => {
+  const getFileRackRecordListings = async (
+    filtersArrayObj = [],
+    isReset = 0
+  ) => {
     setIsLoading(true);
     //console.log('chatListingsByGroupId--->>>>')
     var formdata = new FormData();
@@ -48,12 +51,20 @@ const RackView = ({}) => {
     formdata.append("Userid", userId);
     formdata.append("Token", userToken);
     formdata.append("start", 0);
-    formdata.append("perpage", 20);
-    //For sorting
-    if (sortBy != 0 && sort != 0) {
-      formdata.append("sort_by", sortBy);
-      formdata.append("sort", sort);
+    formdata.append("perpage", 20); 
+    if (isReset == 1) {//Reset the sorting
+      setSortBy(0);
+      setSort(0);
+      formdata.append("sort_by", '');
+      formdata.append("sort", '');
+    } else {
+      //For sorting
+      if (sortBy != 0 && sort != 0) {
+        formdata.append("sort_by", sortBy);
+        formdata.append("sort", sort);
+      }
     }
+
     //For filter
     if (filtersArrayObj?.length > 0) {
       formdata.append("filters", JSON.stringify(filtersArrayObj));
@@ -78,7 +89,7 @@ const RackView = ({}) => {
         text: record.name,
       }));
 
-      await newSortingListings.unshift({ id: 0, text: "Select" });
+      //await newSortingListings.unshift({ id: 0, text: "Select" });
       setFileRackSortingList(newSortingListings || []);
     }
     setIsLoading(false);
@@ -132,16 +143,14 @@ const RackView = ({}) => {
     await getFileRackRecordListings(filtersValue);
   };
   //Add the sorting
-  const sortingFilter = async () => {
+  const sortingFilter = async () => { 
     if (sort != 0 && sortBy != 0) {
       await getFileRackRecordListings();
     }
   };
   //Reset the sorting
   const resetTheSortingFilter = async () => {
-    setSortBy(0);
-    setSort(0);
-    await getFileRackRecordListings();
+    await getFileRackRecordListings([], 1); //1=> Reset the sorting,0=>not reset
   };
   // Add new record code here
 
@@ -232,7 +241,7 @@ const RackView = ({}) => {
                     </div>
                   </div>
                 </div>
-                <div className="FilterSecondRight">
+                {/* <div className="FilterSecondRight">
                   <Button
                     variant="outline-primary"
                     onClick={() => window.history.back()}
@@ -248,8 +257,9 @@ const RackView = ({}) => {
                   <Button variant="primary" onClick={addNewRecordShow}>
                     Add new
                   </Button>
-                </div>
+                </div> */}
               </div>
+
               <div className="FilterThird">
                 <Row className="align-items-center">
                   <Col lg={7}>
@@ -266,8 +276,9 @@ const RackView = ({}) => {
                             <Form.Select
                               size="sm"
                               onChange={handleSelectChange}
-                              value={sort}
+                              value={sortBy}
                             >
+                              <option value="0">Select</option>
                               {fileRackSorting.map((record) => (
                                 <option key={record.id} value={record.id}>
                                   {record.text}
@@ -280,7 +291,7 @@ const RackView = ({}) => {
                             <Form.Select
                               size="sm"
                               onChange={handleSelectSortByChange}
-                              value={sortBy}
+                              value={sort}
                             >
                               <option value="0">Select</option>
                               <option value="asc">Ascending</option>
@@ -290,7 +301,7 @@ const RackView = ({}) => {
                           {/* Filter button */}
                           <div className="d-flex Filterbtn align-items-center">
                             <Button
-                              type="submit"
+                              type="button"
                               variant="primary"
                               className="me-3"
                               onClick={sortingFilter}
@@ -299,7 +310,7 @@ const RackView = ({}) => {
                               Search
                             </Button>
                             <Button
-                              type="submit"
+                              type="button"
                               variant="secondary"
                               onClick={resetTheSortingFilter}
                             >
@@ -320,7 +331,7 @@ const RackView = ({}) => {
                       </div>
                     </div>
                   </Col>
-                  <Col lg={5}>
+                  {/* <Col lg={5}>
                     <div className="text-end OtherFileRacks d-flex justify-content-end align-items-center">
                       <div className="TotalReacord me-3">
                         <h6 className="m-0">
@@ -341,7 +352,7 @@ const RackView = ({}) => {
                         </Link>
                       </div>
                     </div>
-                  </Col>
+                  </Col> */}
                 </Row>
               </div>
             </div>
