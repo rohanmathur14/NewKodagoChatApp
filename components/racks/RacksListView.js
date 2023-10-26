@@ -187,6 +187,11 @@ const RacksListView = ({ fileRackAllData }) => {
     //console.log("perPage-------", perPage);
   }
 
+  const handleOnchangePerPageDropDown = (perPageRecord) => {
+    setPerPage(perPageRecord)
+    setCurrentPage(1)
+  }
+
   const generatePaginationItems = () => {
     const items = [];
 
@@ -361,55 +366,7 @@ const RacksListView = ({ fileRackAllData }) => {
                           <div className="Changetext position-relative">
                             <div className="UsernameDetails ">
                               <h2 className="mb-0">{record.username}</h2>
-                              <div className="UserAction">
-                                {/* Delete */}
-                                {/* <Link href="#!"> */}
-                                  <a onClick={handleDeleteRecordShow}>
-                                    <OverlayTrigger
-                                      placement="top"
-                                      overlay={<Tooltip>Delete</Tooltip>}
-                                    >
-                                      <i className="fi-trash"></i>
-                                    </OverlayTrigger>
-                                  </a>
-                                {/* </Link> */}
-
-                                {/* Comments */}
-                                {/* <Link href="#!"> */}
-                                  <a onClick={handleCommentsListShow}>
-                                    <OverlayTrigger
-                                      placement="top"
-                                      overlay={<Tooltip>Comments</Tooltip>}
-                                    >
-                                      <i className="fi-messenger"></i>
-                                    </OverlayTrigger>
-                                  </a>
-                                {/* </Link> */}
-
-                                {/* Group member */}
-                                {/* <Link href="#!"> */}
-                                  <a onClick={handleAssignListsShow}>
-                                    <OverlayTrigger
-                                      placement="top"
-                                      overlay={<Tooltip>Assign member</Tooltip>}
-                                    >
-                                      <i className="fi-groupteam"></i>
-                                    </OverlayTrigger>
-                                  </a>
-                                {/* </Link> */}
-
-                                {/* History */}
-                                {/* <Link href="#!"> */}
-                                  <a onClick={handleHistoryShow}>
-                                    <OverlayTrigger
-                                      placement="top"
-                                      overlay={<Tooltip>History</Tooltip>}
-                                    >
-                                      <i className="fi-history"></i>
-                                    </OverlayTrigger>
-                                  </a>
-                                {/* </Link> */}
-                              </div>
+                               
                             </div>
                           </div>
                         </div>
@@ -524,13 +481,13 @@ const RacksListView = ({ fileRackAllData }) => {
               {perPage} per page
             </Dropdown.Toggle>
             <Dropdown.Menu className="mx-1">
-              <Dropdown.Item eventKey="1" onClick={() => setPerPage(20)}>
+              <Dropdown.Item eventKey="1" onClick={() => handleOnchangePerPageDropDown(20)}>
                 20 per page
               </Dropdown.Item>
-              <Dropdown.Item eventKey="2" onClick={() => setPerPage(50)}>
+              <Dropdown.Item eventKey="2" onClick={() => handleOnchangePerPageDropDown(50)}>
                 50 per page
               </Dropdown.Item>
-              <Dropdown.Item eventKey="3" onClick={() => setPerPage(100)}>
+              <Dropdown.Item eventKey="3" onClick={() => handleOnchangePerPageDropDown(100)}>
                 100 per page
               </Dropdown.Item>
             </Dropdown.Menu>
