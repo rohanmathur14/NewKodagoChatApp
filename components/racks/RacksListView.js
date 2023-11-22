@@ -23,6 +23,8 @@ import RecoredDocumentView from "../racks/RecoredDocumentView";
 import RecoredMapViewModal from "../racks/RecoredMapViewModal";
 import Form from "react-bootstrap/Form";
 import { useFileRackContext } from "../../components/FileRackContext";
+import Popover from 'react-bootstrap/Popover';
+
 
 const RacksListView = ({ fileRackAllData }) => {
   const { sheetId, groupId, userId, userToken } = useFileRackContext();
@@ -237,6 +239,13 @@ const RacksListView = ({ fileRackAllData }) => {
     return items;
   };
 
+  const popoverHoverFocus = (
+    <Popover id="popover-trigger-hover-focus" title="Popover bottom">
+      <span>https://www.google.com/search?sca_esv=562451240&rlz=1C1ONGR_en-GBIN1073IN1073&sxsrf=AB5stBhOnRGUCuUptoIFQFo0HCXZthVLPQ:1693807402916&q=images&tbm=isch&source=lnms&sa=X&sqi=2&ved=2ahUKEwj1gMakpJCBAxVcd2wGHQQFDeUQ0pQJegQIDRAB&biw=1366&bih=651&dpr=1</span>
+    </Popover>
+  );
+  
+
   return (
     <>
      
@@ -445,8 +454,14 @@ const RacksListView = ({ fileRackAllData }) => {
                               </span>
                             </div>
                           ) : (
-                            <div className="Changetext">
-                              <span>{childRecord.d_value}</span>
+                            <div className="Changetext abc">
+                              <OverlayTrigger
+                                trigger={['hover', 'focus']}
+                                placement="top"
+                                overlay={popoverHoverFocus}
+                              >
+                                <span>{childRecord.d_value}</span>
+                              </OverlayTrigger>
                             </div>
                           )}
                         </div>
