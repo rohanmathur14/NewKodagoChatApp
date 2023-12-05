@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Col, Row } from "react-bootstrap";
 import { Table } from "react-bootstrap";
 import ImageLoader from "../ImageLoader";
- 
 
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
@@ -188,9 +187,9 @@ const RacksListView = ({ fileRackAllData }) => {
   }
 
   const handleOnchangePerPageDropDown = (perPageRecord) => {
-    setPerPage(perPageRecord)
-    setCurrentPage(1)
-  }
+    setPerPage(perPageRecord);
+    setCurrentPage(1);
+  };
 
   const generatePaginationItems = () => {
     const items = [];
@@ -209,16 +208,44 @@ const RacksListView = ({ fileRackAllData }) => {
       );
 
       // Add the page numbers
+      /*
+        for (let page = 1; page <= totalPages; page++) {
+          items.push(
+            <Pagination.Item
+              key={page}
+              active={page === currentPage}
+              onClick={() => setCurrentPage(page)}
+            >
+              {page}
+            </Pagination.Item>
+          );
+        }
+      */
+      // Add ellipsis for long lists
+      const MAX_VISIBLE_PAGES = 5; // Adjust this based on your preference
+
       for (let page = 1; page <= totalPages; page++) {
-        items.push(
-          <Pagination.Item
-            key={page}
-            active={page === currentPage}
-            onClick={() => setCurrentPage(page)}
-          >
-            {page}
-          </Pagination.Item>
-        );
+        if (
+          page === 1 ||
+          page === totalPages ||
+          (page >= currentPage - 2 && page <= currentPage + 2) ||
+          (page >= totalPages - MAX_VISIBLE_PAGES + 1 && page <= totalPages)
+        ) {
+          items.push(
+            <Pagination.Item
+              key={page}
+              active={page === currentPage}
+              onClick={() => setCurrentPage(page)}
+            >
+              {page}
+            </Pagination.Item>
+          );
+        } else if (
+          (page === currentPage - 3 && currentPage > 4) ||
+          (page === currentPage + 3 && currentPage < totalPages - 3)
+        ) {
+          items.push(<Pagination.Ellipsis key={page} />);
+        }
       }
 
       // Add the "Next" button
@@ -239,8 +266,6 @@ const RacksListView = ({ fileRackAllData }) => {
 
   return (
     <>
-     
-
       {/* Delete record  */}
 
       <DeleteRecord
@@ -321,18 +346,18 @@ const RacksListView = ({ fileRackAllData }) => {
 
       <div className="RacksListMains">
         <div className="RacksListView">
-        {!isLoading ? 
-          <Table striped bordered hover responsive className="RacksListTable">
-            <thead>
-              <tr>
-                {fileRackRecordTheadListings.length > 0 && (
-                  <th key={"firstKey"}></th>
-                )}
-                {fileRackRecordTheadListings.map((field, index) => (
-                  <th key={index}>{field.name}</th>
-                ))}
+          {!isLoading ? (
+            <Table striped bordered hover responsive className="RacksListTable">
+              <thead>
+                <tr>
+                  {fileRackRecordTheadListings.length > 0 && (
+                    <th key={"firstKey"}></th>
+                  )}
+                  {fileRackRecordTheadListings.map((field, index) => (
+                    <th key={index}>{field.name}</th>
+                  ))}
 
-                {/* <th>Create at</th>
+                  {/* <th>Create at</th>
                     <th>Date</th>
                     <th>Time</th>
                     <th>Live Image</th>
@@ -345,134 +370,133 @@ const RacksListView = ({ fileRackAllData }) => {
                     <th>Date Of Joining	</th>
                     <th>Location</th>
                     <th>Attendance Approval</th> */}
-              </tr>
-            </thead>
-            <tbody>
-              {fileRackRecordDataListings.total > 0 ? (
-                fileRackRecordDataListings?.dbdata?.map((record, index) => (
-                  <tr key={index}>
-                    <td>
-                      <div className="d-flex align-items-center px-2 TableDiv">
-                        <div className="prof-pic position-relative">
-                          <ImageLoader
-                            src={record.imageLink}
-                            quality={100}
-                            layout="fill"
-                            objectFit="contain"
-                            className="position-relative"
-                          />
-                        </div>
-                        <div className="username ms-2">
-                          <div className="Changetext position-relative">
-                            <div className="UsernameDetails ">
-                              <h2 className="mb-0">{record.username}</h2>
-                               
+                </tr>
+              </thead>
+              <tbody>
+                {fileRackRecordDataListings.total > 0 ? (
+                  fileRackRecordDataListings?.dbdata?.map((record, index) => (
+                    <tr key={index}>
+                      <td>
+                        <div className="d-flex align-items-center px-2 TableDiv">
+                          <div className="prof-pic position-relative">
+                            <ImageLoader
+                              src={record.imageLink}
+                              quality={100}
+                              layout="fill"
+                              objectFit="contain"
+                              className="position-relative"
+                            />
+                          </div>
+                          <div className="username ms-2">
+                            <div className="Changetext position-relative">
+                              <div className="UsernameDetails ">
+                                <h2 className="mb-0">{record.username}</h2>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </td>
-                    {record?.data.map((childRecord, childIndex) => (
-                      <td key={childIndex}>
-                        <div className="d-flex align-items-center px-2 TableDiv">
-                          {childRecord?.files_data?.length > 0 &&
-                          (childRecord.field_type == "image" ||
-                            childRecord.field_type == "video") ? (
-                            <div className="Changetext">
-                              <span>
-                                <a
-                                  href="#!"
-                                  onClick={() =>
-                                    handleImgPopupShow(childRecord.files_data)
-                                  }
-                                >
-                                  View
-                                </a>
-                              </span>
-                            </div>
-                          ) : childRecord.full_URL &&
-                            childRecord.field_type === "signature" ? (
-                            <>
-                              {
-                                <div className="Changetext">
-                                  <span>
-                                    <a
-                                      href="#!"
-                                      onClick={() =>
-                                        handleImgPopupShow([
-                                          {
-                                            file_type: "signature",
-                                            mainUrl: childRecord.full_URL,
-                                          },
-                                        ])
-                                      }
-                                    >
-                                      View
-                                    </a>
-                                  </span>
-                                </div>
-                              }
-                            </>
-                          ) : childRecord?.files_data?.length > 0 &&
-                            childRecord.field_type === "document" ? (
-                            <div className="Changetext">
-                              <span>
-                                <a
-                                  href="#!"
-                                  onClick={() =>
-                                    handleDocPopupShow(childRecord.files_data)
-                                  }
-                                >
-                                  View
-                                </a>
-                              </span>
-                            </div>
-                          ) : childRecord.field_type === "location" &&
-                            childRecord?.unserialize_data?.latlng?.length >
-                              0 ? (
-                            <div className="Changetext">
-                              <span>
-                                <a
-                                  href="#!"
-                                  onClick={() =>
-                                    handleMapPopupShow(
-                                      childRecord.unserialize_data.latlng
-                                    )
-                                  }
-                                >
-                                  View
-                                </a>
-                              </span>
-                            </div>
-                          ) : (
-                            <div className="Changetext">
-                              <span>{childRecord.d_value}</span>
-                            </div>
-                          )}
-                        </div>
                       </td>
-                    ))}
+                      {record?.data.map((childRecord, childIndex) => (
+                        <td key={childIndex}>
+                          <div className="d-flex align-items-center px-2 TableDiv">
+                            {childRecord?.files_data?.length > 0 &&
+                            (childRecord.field_type == "image" ||
+                              childRecord.field_type == "video") ? (
+                              <div className="Changetext">
+                                <span>
+                                  <a
+                                    href="#!"
+                                    onClick={() =>
+                                      handleImgPopupShow(childRecord.files_data)
+                                    }
+                                  >
+                                    View
+                                  </a>
+                                </span>
+                              </div>
+                            ) : childRecord.full_URL &&
+                              childRecord.field_type === "signature" ? (
+                              <>
+                                {
+                                  <div className="Changetext">
+                                    <span>
+                                      <a
+                                        href="#!"
+                                        onClick={() =>
+                                          handleImgPopupShow([
+                                            {
+                                              file_type: "signature",
+                                              mainUrl: childRecord.full_URL,
+                                            },
+                                          ])
+                                        }
+                                      >
+                                        View
+                                      </a>
+                                    </span>
+                                  </div>
+                                }
+                              </>
+                            ) : childRecord?.files_data?.length > 0 &&
+                              childRecord.field_type === "document" ? (
+                              <div className="Changetext">
+                                <span>
+                                  <a
+                                    href="#!"
+                                    onClick={() =>
+                                      handleDocPopupShow(childRecord.files_data)
+                                    }
+                                  >
+                                    View
+                                  </a>
+                                </span>
+                              </div>
+                            ) : childRecord.field_type === "location" &&
+                              childRecord?.unserialize_data?.latlng?.length >
+                                0 ? (
+                              <div className="Changetext">
+                                <span>
+                                  <a
+                                    href="#!"
+                                    onClick={() =>
+                                      handleMapPopupShow(
+                                        childRecord.unserialize_data.latlng
+                                      )
+                                    }
+                                  >
+                                    View
+                                  </a>
+                                </span>
+                              </div>
+                            ) : (
+                              <div className="Changetext">
+                                <span>{childRecord.d_value}</span>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      ))}
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      style={{ textAlign: "center" }}
+                      colSpan={fileRackRecordTheadListings.length}
+                    >
+                      Record Not found
+                    </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    style={{ textAlign: "center" }}
-                    colSpan={fileRackRecordTheadListings.length}
-                  >
-                    Record Not found
-                  </td>
-                </tr>
-              )}
-               
-            </tbody>
-          </Table>
-          :<p style={{padding:'20px',textAlign:'center'}}>Loading...</p>}
+                )}
+              </tbody>
+            </Table>
+          ) : (
+            <p style={{ padding: "20px", textAlign: "center" }}>Loading...</p>
+          )}
         </div>
 
-        
         <div className="RacksListPagination d-flex justify-content-center align-items-center mt-3">
-          <Pagination>            
+          <Pagination>
             <Pagination>{generatePaginationItems()}</Pagination>
           </Pagination>
 
@@ -481,20 +505,27 @@ const RacksListView = ({ fileRackAllData }) => {
               {perPage} per page
             </Dropdown.Toggle>
             <Dropdown.Menu className="mx-1">
-              <Dropdown.Item eventKey="1" onClick={() => handleOnchangePerPageDropDown(20)}>
+              <Dropdown.Item
+                eventKey="1"
+                onClick={() => handleOnchangePerPageDropDown(20)}
+              >
                 20 per page
               </Dropdown.Item>
-              <Dropdown.Item eventKey="2" onClick={() => handleOnchangePerPageDropDown(50)}>
+              <Dropdown.Item
+                eventKey="2"
+                onClick={() => handleOnchangePerPageDropDown(50)}
+              >
                 50 per page
               </Dropdown.Item>
-              <Dropdown.Item eventKey="3" onClick={() => handleOnchangePerPageDropDown(100)}>
+              <Dropdown.Item
+                eventKey="3"
+                onClick={() => handleOnchangePerPageDropDown(100)}
+              >
                 100 per page
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </div>
-
-        
 
         {/* Data Save Change  */}
 
