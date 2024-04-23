@@ -184,7 +184,7 @@ const RackView = ({}) => {
                     </h5>
                   </div>
                   {/* Grid and List button code here */}
-                  <div className="GridListBtn">
+                  <div className="GridListBtn d-none">
                     {/* <Link href="#!"> */}
                     <OverlayTrigger
                       placement="top"
@@ -219,7 +219,7 @@ const RackView = ({}) => {
                   </div>
 
                   {/* Data usage code here */}
-                  <div className="datausage ms-3">
+                  <div className="datausage ms-3 d-none">
                     <h6>Cricket Fan Club</h6>
                     <div className="d-flex align-items-center">
                       <ProgressBar
@@ -319,7 +319,7 @@ const RackView = ({}) => {
                           </div>
                         </div>
                       </Form>
-                      <div className="text-end AdvanceFilterbtn ms-3">
+                      <div className="text-end AdvanceFilterbtn ms-3 d-none">
                         <div className="d-inline-block" onClick={filterShow}>
                           <Link href="#!">
                             <a>
