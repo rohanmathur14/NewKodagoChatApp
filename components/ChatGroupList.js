@@ -82,7 +82,7 @@ const ChatGroupList = ({ setGroupID }) => {
           <>
             <div className="ChatGroupHead d-flex align-items-center justify-content-between">
               <h5 className="m-0">Group</h5>
-              <Link href="#!">
+              {/* <Link href="#!">
                 <a className="d-inline-flex" onClick={handleClick}>
                   <OverlayTrigger
                     placement="top"
@@ -91,7 +91,7 @@ const ChatGroupList = ({ setGroupID }) => {
                     <i className="fi-plus"></i>
                   </OverlayTrigger>
                 </a>
-              </Link>
+              </Link> */}
             </div>
 
             <div className="ChatGroupSearch position-relative mb-4">
