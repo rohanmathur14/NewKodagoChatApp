@@ -211,8 +211,11 @@ const Chat = ({ chatGroupId }) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault(); // Prevent form submission
       await onSubmit();
+      // textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   };
+
+  
   const handleChangeField = async (e) => {
     const textMessage = e.target.value;
     await setChatMessage(textMessage);
@@ -524,7 +527,13 @@ const Chat = ({ chatGroupId }) => {
     return () => {
       autosize.destroy(textareaRef.current);
     };
-  }, []);
+    
+  },
+   []);
+
+  // const handleKeyDown = (e) => {
+    
+  // };
 
   useEffect(() => {
     const handleScroll = async () => {

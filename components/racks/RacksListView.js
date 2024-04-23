@@ -22,6 +22,8 @@ import RecoredDocumentView from "../racks/RecoredDocumentView";
 import RecoredMapViewModal from "../racks/RecoredMapViewModal";
 import Form from "react-bootstrap/Form";
 import { useFileRackContext } from "../../components/FileRackContext";
+import Popover from 'react-bootstrap/Popover';
+
 
 const RacksListView = ({ fileRackAllData }) => {
   const { sheetId, groupId, userId, userToken } = useFileRackContext();
@@ -264,6 +266,13 @@ const RacksListView = ({ fileRackAllData }) => {
     return items;
   };
 
+  const popoverHoverFocus = (
+    <Popover id="popover-trigger-hover-focus" title="Popover bottom">
+      <span>https://www.google.com/search?sca_esv=562451240&rlz=1C1ONGR_en-GBIN1073IN1073&sxsrf=AB5stBhOnRGUCuUptoIFQFo0HCXZthVLPQ:1693807402916&q=images&tbm=isch&source=lnms&sa=X&sqi=2&ved=2ahUKEwj1gMakpJCBAxVcd2wGHQQFDeUQ0pQJegQIDRAB&biw=1366&bih=651&dpr=1</span>
+    </Popover>
+  );
+  
+
   return (
     <>
       {/* Delete record  */}
@@ -378,6 +387,86 @@ const RacksListView = ({ fileRackAllData }) => {
                     <tr key={index}>
                       <td>
                         <div className="d-flex align-items-center px-2 TableDiv">
+
+                          {childRecord?.files_data?.length > 0 &&
+                          (childRecord.field_type == "image" ||
+                            childRecord.field_type == "video") ? (
+                            <div className="Changetext">
+                              <span>
+                                <a
+                                  href="#!"
+                                  onClick={() =>
+                                    handleImgPopupShow(childRecord.files_data)
+                                  }
+                                >
+                                  View
+                                </a>
+                              </span>
+                            </div>
+                          ) : childRecord.full_URL &&
+                            childRecord.field_type === "signature" ? (
+                            <>
+                              {
+                                <div className="Changetext">
+                                  <span>
+                                    <a
+                                      href="#!"
+                                      onClick={() =>
+                                        handleImgPopupShow([
+                                          {
+                                            file_type: "signature",
+                                            mainUrl: childRecord.full_URL,
+                                          },
+                                        ])
+                                      }
+                                    >
+                                      View
+                                    </a>
+                                  </span>
+                                </div>
+                              }
+                            </>
+                          ) : childRecord?.files_data?.length > 0 &&
+                            childRecord.field_type === "document" ? (
+                            <div className="Changetext">
+                              <span>
+                                <a
+                                  href="#!"
+                                  onClick={() =>
+                                    handleDocPopupShow(childRecord.files_data)
+                                  }
+                                >
+                                  View
+                                </a>
+                              </span>
+                            </div>
+                          ) : childRecord.field_type === "location" &&
+                            childRecord?.unserialize_data?.latlng?.length >
+                              0 ? (
+                            <div className="Changetext">
+                              <span>
+                                <a
+                                  href="#!"
+                                  onClick={() =>
+                                    handleMapPopupShow(
+                                      childRecord.unserialize_data.latlng
+                                    )
+                                  }
+                                >
+                                  View
+                                </a>
+                              </span>
+                            </div>
+                          ) : (
+                            <div className="Changetext abc">
+                              <OverlayTrigger
+                                trigger={['hover', 'focus']}
+                                placement="top"
+                                overlay={popoverHoverFocus}
+                              >
+                                <span>{childRecord.d_value}</span>
+                              </OverlayTrigger>
+
                           <div className="prof-pic position-relative">
                             <ImageLoader
                               src={record.imageLink}

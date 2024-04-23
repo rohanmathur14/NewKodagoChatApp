@@ -717,10 +717,14 @@ width: 139px;}
 .RacksListView table tr td{padding:0;}
 .RacksListView table tr td .TableDiv .Changetext{padding:2px 3px;height: 44px;display:flex;align-items:center;
 flex:1;}
+.RacksListView table tr td .TableDiv .Changetext span{white-space: nowrap;overflow: hidden;text-overflow: ellipsis;
+  width: 200px;}
 .username{flex:1;}
 
 .RacksListView table tr td input{height:43px;min-height: auto;padding: 0px 6px;border: 0px;font-size:13px;}
 .Changetext{color:#33475b;font-size:13px;}
+.Changetext a{color:#33475b;font-size:13px;}
+.Changetext a:hover{color:#0060A4;}
 .UserAction{
  position:absolute;
  right:-5px;
@@ -932,4 +936,12 @@ transition-duration:.4s;}
 .DocumantListBottom a{color:#8697a8;font-size:12px;transition-duration:.5s;}
 .RackDocumantBoxTop{    padding: 25px 15px 0px;}
 .DocumantListBottom a:hover{color:#0060A4;}
+
+.AdvanceFilter .select2-container--default .select2-selection--single .select2-selection__rendered{line-height: 35px;}
+.AdvanceFilter .select2-container .select2-selection--single{height: 36px;font-size: 13px;
+  border: 1px solid #d5d2dc;border-radius: 0.5rem;}
+
+.bs-popover-top{border-radius: 3px;font-size: 14px;background-color: #0060A4;color: #fff;padding:10px 10px;
+text-align:center;}
+.bs-popover-top > .popover-arrow::after, .bs-popover-auto[data-popper-placement^=top] > .popover-arrow::after{border-top-color:#0060A4}
 

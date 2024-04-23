@@ -131,6 +131,7 @@ const StoriesList = (props) => {
         } else {//For text
            //for text
            newStoryObject = {
+           
             content: (props) => (
               <div className="h-100 w-100">
                 <div
