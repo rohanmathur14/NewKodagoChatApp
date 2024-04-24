@@ -24,11 +24,12 @@ const KodagoAdminBody = ({}) => {
               <ChatGroupList setGroupID={setGroupID} />
             </Col>
             <Col lg={"6"}>
-              {groupID && groupID > 0 ? (
+              {/* {groupID && groupID > 0 ? (
                 <Chat chatGroupId={groupID} />
               ) : (
                 <HighLights />
-              )}
+              )} */}
+              <HighLights />
             </Col>
             <Col lg={"3"}>              
               {groupID && groupID > 0 ? (<FileRacks GroupId={groupID} />) : ""}
